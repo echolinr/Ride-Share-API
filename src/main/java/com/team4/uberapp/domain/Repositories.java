@@ -39,9 +39,14 @@ public abstract class Repositories {
         return instance.passengersRepository();
     }
 
+    public static RideRepository rides() {
+        return instance.ridesRepository();
+    }
+
     protected abstract CarRepository carsRepository();
     protected abstract DriverRepository driversRepository();
     protected abstract PassengerRepository passengersRepository();
+    protected abstract RideRepository ridesRepository();
 
     private static Repositories instance;
 }

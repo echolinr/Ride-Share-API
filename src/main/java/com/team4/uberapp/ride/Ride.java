@@ -1,25 +1,25 @@
-package com.team4.uberapp.driver;
+package com.team4.uberapp.ride;
 
 /**
  * Created by HectorGuo on 11/8/16.
  */
 
 import com.team4.uberapp.domain.Validable;
-import lombok.*;
+import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class Driver implements Validable {
+public class Ride implements Validable {
     private UUID id;
     private String name;
 
     @SuppressWarnings("UnusedDeclaration")
-    protected Driver() {
+    protected Ride() {
         // for mongolink
     }
 
-    public Driver(String name) {
+    public Ride(String name) {
         this.id = UUID.randomUUID();
         this.name = name;
         System.out.println( name );

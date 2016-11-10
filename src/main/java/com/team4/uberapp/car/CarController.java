@@ -245,13 +245,13 @@ public class CarController {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        // get Driver by id, generate UUID from string id first
+        // get Ride by id, generate UUID from string id first
         UUID driverId = UUID.fromString(req.params(":driverId"));
         Driver driver = Repositories.drivers().get(driverId);
 
         if(driver == null) {
             res.status(404);
-            return "Driver: " + driverId +" not found";
+            return "Ride: " + driverId +" not found";
         }
 
         try{

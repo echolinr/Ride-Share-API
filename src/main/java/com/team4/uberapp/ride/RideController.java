@@ -1,13 +1,13 @@
-package com.team4.uberapp.driver;
+package com.team4.uberapp.ride;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.MongoConfiguration;
-import org.mongolink.MongoSession;
+import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
-import spark.Route;
 import com.team4.uberapp.util.JsonUtil;
+import org.mongolink.MongoSession;
+import spark.Route;
 
 import java.util.List;
 import java.util.UUID;
@@ -15,19 +15,19 @@ import java.util.UUID;
 /**
  * Created by HectorGuo on 11/8/16.
  */
-public class DriverController extends JsonUtil {
+public class RideController extends JsonUtil {
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        List<Driver> drivers = Repositories.drivers().all();
+        List<Ride> rides = Repositories.rides().all();
 
         session.stop();
         res.status(200);
         res.type("application/json");
-        return dataToJson(drivers);
+        return dataToJson(rides);
     };
 
     public static Route getById = (req, res) -> {
@@ -37,12 +37,12 @@ public class DriverController extends JsonUtil {
         Repositories.initialise(new MongoRepositories(session));
 
         UUID uid = UUID.fromString(req.params(":id"));
-        Driver driver = Repositories.drivers().get(uid);
+        Ride ride = Repositories.rides().get(uid);
 
         session.stop();
         res.status(200);
         res.type("application/json");
-        return dataToJson(driver);
+        return dataToJson(ride);
     };
 
     public static Route create = (req, res) -> {
@@ -53,22 +53,22 @@ public class DriverController extends JsonUtil {
 
         try{
             ObjectMapper mapper = new ObjectMapper();
-            Driver driver = mapper.readValue(req.body(), Driver.class);
+            Ride ride = mapper.readValue(req.body(), Ride.class);
 
             try {
-                driver.isValid();
+                ride.isValid();
             } catch (Exception e){
                 res.status(400);
                 return dataToJson(e.getMessage());
             }
 
-            driver.setId(UUID.randomUUID());
-            Repositories.drivers().add(driver);
+            ride.setId(UUID.randomUUID());
+            Repositories.rides().add(ride);
 
             session.stop();
             res.status(201);
             res.type("application/json");
-            return dataToJson(driver);
+            return dataToJson(ride);
 
         }catch (JsonParseException e){
             session.stop();
@@ -85,29 +85,29 @@ public class DriverController extends JsonUtil {
         Repositories.initialise(new MongoRepositories(session));
 
         UUID uid = UUID.fromString(req.params(":id"));
-        Driver driver = Repositories.drivers().get(uid);
-        Driver validationDriver = (Driver) driver.clone();
+        Ride ride = Repositories.rides().get(uid);
+        Ride validationRide = (Ride) ride.clone();
 
         try{
             ObjectMapper mapper = new ObjectMapper();
-            Driver updatedDriver = mapper.readValue(req.body(), Driver.class);
+            Ride updatedRide = mapper.readValue(req.body(), Ride.class);
 
-            if(updatedDriver.getName() != null){
-                if(!updatedDriver.getName().isEmpty()){
-                    validationDriver.setName(updatedDriver.getName());
+            if(updatedRide.getName() != null){
+                if(!updatedRide.getName().isEmpty()){
+                    validationRide.setName(updatedRide.getName());
                 }
             }
 
 
             try{
-                validationDriver.isValid();
+                validationRide.isValid();
             }catch (Exception e){
                 session.stop();
                 res.status(400);
                 return dataToJson(e.getMessage());
             }
 
-            driver.setName(validationDriver.getName());
+            ride.setName(validationRide.getName());
             session.stop();
             res.status(200);
             res.type("application/json");
@@ -128,8 +128,8 @@ public class DriverController extends JsonUtil {
         Repositories.initialise(new MongoRepositories(session));
 
         UUID uid = UUID.fromString(req.params(":id"));
-        Driver driver = Repositories.drivers().get(uid);
-        Repositories.drivers().delete(driver);
+        Ride ride = Repositories.rides().get(uid);
+        Repositories.rides().delete(ride);
 
         session.stop();
         res.status(200);

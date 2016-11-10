@@ -3,6 +3,7 @@ package com.team4.uberapp;
 import com.team4.uberapp.car.CarController;
 import com.team4.uberapp.driver.DriverController;
 import com.team4.uberapp.passenger.PassengerController;
+import com.team4.uberapp.ride.RideController;
 
 import static spark.Spark.*;
 
@@ -41,7 +42,7 @@ public class UberAppMain {
         patch(versionURI +"/drivers/:id", DriverController.update);
 
 
-        // Driver sub-resouce car
+        // Ride sub-resouce car
         get(versionURI +"/drivers/:driverId/cars", CarController.getByDriverId);
         post(versionURI + "/drivers/:driverId/cars", CarController.createByDriverId);
 
@@ -52,6 +53,12 @@ public class UberAppMain {
         delete(versionURI+"/passengers/:id",PassengerController.delById);
         patch(versionURI +"/passengers/:id", PassengerController.update);
 
+        // Rides
+        get(versionURI +"/rides", RideController.getAll);
+        get(versionURI +"/rides/:id", RideController.getById);
+        post(versionURI + "/rides", RideController.create);
+        delete(versionURI +"/rides/:id", RideController.delById);
+        patch(versionURI +"/rides/:id", RideController.update);
     }
 
 }

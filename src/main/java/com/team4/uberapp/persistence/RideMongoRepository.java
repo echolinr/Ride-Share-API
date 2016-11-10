@@ -21,40 +21,13 @@
 
 package com.team4.uberapp.persistence;
 
-import com.team4.uberapp.domain.PassengerRepository;
-import org.mongolink.MongoSession;
-import com.team4.uberapp.domain.CarRepository;
-import com.team4.uberapp.domain.DriverRepository;
 import com.team4.uberapp.domain.RideRepository;
-import com.team4.uberapp.domain.Repositories;
+import com.team4.uberapp.ride.Ride;
+import org.mongolink.MongoSession;
 
-public class MongoRepositories extends Repositories {
-
-    public MongoRepositories(MongoSession session) {
-        this.session = session;
+public class RideMongoRepository extends MongoRepository<Ride> implements RideRepository {
+    public RideMongoRepository(MongoSession mongoSession) {
+        super(mongoSession);
     }
-
-    @Override
-    protected CarRepository carsRepository() {
-        return new CarMongoRepository(session);
-    }
-
-    @Override
-    protected DriverRepository driversRepository() {
-        return new DriverMongoRepository(session);
-    }
-
-    @Override
-    protected PassengerRepository passengersRepository() {
-        return new PassengerMongoRepository(session);
-    }
-
-    @Override
-    protected RideRepository ridesRepository() {
-        return new RideMongoRepository(session);
-    }
-
-    private MongoSession session;
-
 
 }
