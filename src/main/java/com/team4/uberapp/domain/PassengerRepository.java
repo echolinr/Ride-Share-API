@@ -19,29 +19,9 @@
  *
  */
 
-package com.team4.uberapp.domain;;
+package com.team4.uberapp.domain;
 
-public abstract class Repositories {
+import com.team4.uberapp.passenger.Passenger;
 
-    public static void initialise(Repositories instance) {
-        Repositories.instance = instance;
-    }
-
-    public static CarRepository cars() {
-        return instance.carsRepository();
-    }
-
-    public static DriverRepository drivers() {
-        return instance.driversRepository();
-    }
-
-    public static PassengerRepository passengers() {
-        return instance.passengersRepository();
-    }
-
-    protected abstract CarRepository carsRepository();
-    protected abstract DriverRepository driversRepository();
-    protected abstract PassengerRepository passengersRepository();
-
-    private static Repositories instance;
+public interface PassengerRepository extends Repository<Passenger> {
 }

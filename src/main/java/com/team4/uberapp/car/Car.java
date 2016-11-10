@@ -21,13 +21,14 @@
 
 package com.team4.uberapp.car;
 
-import java.util.UUID;
-import lombok.*;
 import com.team4.uberapp.domain.Validable;
+import lombok.Data;
+
+import java.util.UUID;
 
 
 @Data
-public class Car implements Validable {
+public class Car implements Validable, Cloneable {
     private UUID id;
     //private DateTime creationDate = new DateTime();
     private String make;
@@ -59,5 +60,9 @@ public class Car implements Validable {
             throw new Exception("The License Plate Should Have At Least 8 Characters");
         }
         return true;
+    }
+
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

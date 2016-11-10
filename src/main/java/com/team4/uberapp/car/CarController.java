@@ -1,15 +1,15 @@
 package com.team4.uberapp.car;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
-import org.mongolink.MongoSession;
-import spark.*;
 import com.team4.uberapp.util.JsonUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mongolink.MongoSession;
+import spark.Route;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,11 +31,14 @@ public class CarController {
         session.stop();
 
         res.status(200);
+        res.type("application/json");
         if (cars.size() == 0) {
             return "No cars";
         } else {
-            res.type("application/json");
-            return JsonUtil.dataToJson(cars);
+            //return car.size();
+            //return JsonUtil.dataToJson(car);
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            return gson.toJson(cars);
         }
 
     };
@@ -55,12 +58,12 @@ public class CarController {
         // close database connection
         session.stop();
 
+        res.type("application/json");
         if (car == null) {
             res.status(404); // 404 Not found
             return "Car: " + req.params(":id") +" not found";
         } else {
             res.status(200);
-            res.type("application/json");
             return JsonUtil.dataToJson(car);
         }
     };
@@ -150,6 +153,7 @@ public class CarController {
         UUID uid = UUID.fromString(req.params(":id"));
         Car car = Repositories.cars().get(uid);
 
+        res.type("application/json");
         if (car == null) {
             res.status(404); // 404 Not found
             // close database connection

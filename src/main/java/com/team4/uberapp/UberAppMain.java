@@ -1,9 +1,10 @@
 package com.team4.uberapp;
 
-import static spark.Spark.*;
-
 import com.team4.uberapp.car.CarController;
 import com.team4.uberapp.driver.DriverController;
+import com.team4.uberapp.passenger.PassengerController;
+
+import static spark.Spark.*;
 
 /**
  * Created by lzhai & hectorguo on 2016/11/2.
@@ -38,6 +39,13 @@ public class UberAppMain {
         post(versionURI + "/drivers", DriverController.create);
         delete(versionURI +"/drivers/:id", DriverController.delById);
         patch(versionURI +"/drivers/:id", DriverController.update);
+
+        //Passengers
+        get(versionURI +"/passengers", PassengerController.getAll);
+        get(versionURI +"/passengers/:id", PassengerController.getById);
+        post(versionURI+"/passengers", PassengerController.create);
+        delete(versionURI+"/passengers/:id",PassengerController.delById);
+        patch(versionURI +"/passengers/:id", PassengerController.update);
 
 
     }
