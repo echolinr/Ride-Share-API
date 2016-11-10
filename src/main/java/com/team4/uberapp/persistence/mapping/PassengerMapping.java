@@ -19,36 +19,28 @@
  *
  */
 
-package com.team4.uberapp.persistence;
+package com.team4.uberapp.persistence.mapping;
 
-import com.team4.uberapp.domain.PassengerRepository;
-import org.mongolink.MongoSession;
-import com.team4.uberapp.domain.CarRepository;
-import com.team4.uberapp.domain.DriverRepository;
-import com.team4.uberapp.domain.Repositories;
+import com.team4.uberapp.passenger.Passenger;
+import org.mongolink.domain.mapper.AggregateMap;
 
-public class MongoRepositories extends Repositories {
-
-    public MongoRepositories(MongoSession session) {
-        this.session = session;
-    }
+@SuppressWarnings("UnusedDeclaration")
+public class PassengerMapping extends AggregateMap<Passenger> {
 
     @Override
-    protected CarRepository carsRepository() {
-        return new CarMongoRepository(session);
+    public void map() {
+        id().onProperty(element().getId()).natural();
+        property().onField("firstName");
+        property().onField("lastName");
+        property().onField("emailAddress");
+        property().onField("password");
+        property().onField("addressLine1");
+        property().onField("addressLine2");
+        property().onField("city");
+        property().onField("state");
+        property().onField("zip");
+        property().onField("phoneNumber");
+        //property().(element().getValidRideTypes().    );
+        //property().onProperty(element().getCreationDate());
     }
-
-    @Override
-    protected DriverRepository driversRepository() {
-        return new DriverMongoRepository(session);
-    }
-
-    @Override
-    protected PassengerRepository passengersRepository() {
-        return new PassengerMongoRepository(session);
-    }
-
-    private MongoSession session;
-
-
 }

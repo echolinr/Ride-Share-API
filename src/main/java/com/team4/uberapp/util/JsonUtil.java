@@ -15,7 +15,7 @@ public class JsonUtil {
             mapper.writeValue(sw, data);
             return sw.toString();
         } catch (IOException e) {
-            throw new RuntimeException("IOEXception while mapping object (" + data + ") to JSON");
+            throw new RuntimeException("IOEXception while mapping object to JSON");
         }
     }
 }

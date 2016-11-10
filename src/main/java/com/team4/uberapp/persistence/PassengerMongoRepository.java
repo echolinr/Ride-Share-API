@@ -19,29 +19,15 @@
  *
  */
 
-package com.team4.uberapp.domain;;
+package com.team4.uberapp.persistence;
 
-public abstract class Repositories {
+import com.team4.uberapp.domain.PassengerRepository;
+import com.team4.uberapp.passenger.Passenger;
+import org.mongolink.MongoSession;
 
-    public static void initialise(Repositories instance) {
-        Repositories.instance = instance;
+public class PassengerMongoRepository extends MongoRepository<Passenger> implements PassengerRepository {
+    public PassengerMongoRepository(MongoSession mongoSession) {
+        super(mongoSession);
     }
 
-    public static CarRepository cars() {
-        return instance.carsRepository();
-    }
-
-    public static DriverRepository drivers() {
-        return instance.driversRepository();
-    }
-
-    public static PassengerRepository passengers() {
-        return instance.passengersRepository();
-    }
-
-    protected abstract CarRepository carsRepository();
-    protected abstract DriverRepository driversRepository();
-    protected abstract PassengerRepository passengersRepository();
-
-    private static Repositories instance;
 }
