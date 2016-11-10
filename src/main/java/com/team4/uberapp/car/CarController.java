@@ -1,11 +1,13 @@
 package com.team4.uberapp.car;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
-import com.team4.uberapp.persistence.MongoRepositories;
+import com.team4.uberapp.persistence.*;
+import com.team4.uberapp.driver.Driver;
 import org.mongolink.MongoSession;
 import spark.*;
 import com.team4.uberapp.util.JsonUtil;
@@ -13,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by HectorGuo on 11/8/16.
@@ -27,7 +30,7 @@ public class CarController {
 
         List<Car> cars = Repositories.cars().all();
 
-            /* close database connection */
+        /* close database connection */
         session.stop();
 
         res.status(200);
@@ -226,6 +229,80 @@ public class CarController {
             } else {
                 return "Car" + req.params(":id") + "incorrect params" + req.body();
             }
+        }
+    };
+
+    // POST /drivers/:driverId/cars  Create car
+    public static Route createByDriverId = (req, res) -> {
+        MongoSession session = MongoConfiguration.createSession();
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        // get Driver by id, generate UUID from string id first
+        UUID driverId = UUID.fromString(req.params(":driverId"));
+        Driver driver = Repositories.drivers().get(driverId);
+
+        if(driver == null) {
+            res.status(404);
+            return "Driver: " + driverId +" not found";
+        }
+
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            Car car = mapper.readValue(req.body(), Car.class);
+
+            try {
+                car.isValid();
+            } catch (Exception e){
+                res.status(400);
+                return JsonUtil.dataToJson(e.getMessage());
+            }
+
+            car.setId(UUID.randomUUID());
+            car.setDriverId(driverId);
+            Repositories.cars().add(car);
+
+            session.stop();
+            res.status(201);
+            res.type("application/json");
+            return JsonUtil.dataToJson(car);
+
+        }catch (JsonParseException e){
+            session.stop();
+            res.status(400);
+            res.type("application/json");
+            return JsonUtil.dataToJson(e.getMessage());
+        }
+    };
+
+    // GET /drivers/:driverId/cars  Get car
+    public static Route getByDriverId = (req, res) -> {
+        //initialize db connection
+        MongoSession session = MongoConfiguration.createSession();
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        UUID driverId = UUID.fromString(req.params(":driverId"));
+        List<Car> cars = Repositories.cars().all();
+
+        List<Car> matchedCar = cars
+                .stream()
+                .filter((car) -> {
+                    if(car.getDriverId() == null) {
+                        return false;
+                    }
+                    return driverId.equals(car.getDriverId());
+                })
+                .collect(Collectors.toList());;
+        /* close database connection */
+        session.stop();
+
+        res.status(200);
+        if (matchedCar.size() == 0) {
+            return "No cars";
+        } else {
+            res.type("application/json");
+            return JsonUtil.dataToJson(matchedCar);
         }
     };
 }

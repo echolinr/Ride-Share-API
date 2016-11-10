@@ -53,6 +53,7 @@ public abstract class MongoRepository<T> implements Repository<T> {
         return session.getAll(persistentType());
     }
 
+
     protected final Class<T> persistentType() {
         final ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();
         return (Class<T>) superclass.getActualTypeArguments()[0];

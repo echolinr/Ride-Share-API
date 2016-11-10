@@ -7,9 +7,11 @@ package com.team4.uberapp.driver;
 import com.team4.uberapp.domain.Validable;
 import lombok.*;
 
+import java.util.UUID;
+
 @Data
 public class Driver implements Validable {
-    private Object id;
+    private UUID id;
     private String name;
 
     @SuppressWarnings("UnusedDeclaration")
@@ -18,6 +20,7 @@ public class Driver implements Validable {
     }
 
     public Driver(String name) {
+        this.id = UUID.randomUUID();
         this.name = name;
         System.out.println( name );
     }

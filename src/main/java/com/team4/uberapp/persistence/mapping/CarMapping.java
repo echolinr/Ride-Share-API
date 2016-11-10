@@ -36,6 +36,7 @@ public class CarMapping extends AggregateMap<Car> {
         property().onField("carType");
         property().onProperty(element().getMaxPassengers());
         property().onField("validRideTypes");
+        property().onField("driverId");
         //property().(element().getValidRideTypes().    );
         //property().onProperty(element().getCreationDate());
     }

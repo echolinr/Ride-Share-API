@@ -39,6 +39,9 @@ public class UberAppMain {
         delete(versionURI +"/drivers/:id", DriverController.delById);
         patch(versionURI +"/drivers/:id", DriverController.update);
 
+        // Driver sub-resouce car
+        get(versionURI +"/drivers/:driverId/cars", CarController.getByDriverId);
+        post(versionURI + "/drivers/:driverId/cars", CarController.createByDriverId);
 
     }
 

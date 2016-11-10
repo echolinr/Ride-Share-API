@@ -6,12 +6,11 @@ import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.MongoConfiguration;
 import org.mongolink.MongoSession;
 import com.team4.uberapp.persistence.MongoRepositories;
-import spark.Request;
-import spark.Response;
 import spark.Route;
 import com.team4.uberapp.util.JsonUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by HectorGuo on 11/8/16.
@@ -37,11 +36,12 @@ public class DriverController extends JsonUtil {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-
-        Driver driver = Repositories.drivers().get(req.params(":id"));
+        UUID uid = UUID.fromString(req.params(":id"));
+        Driver driver = Repositories.drivers().get(uid);
 
         session.stop();
         res.status(200);
+        res.type("application/json");
         return dataToJson(driver);
     };
 
@@ -62,6 +62,7 @@ public class DriverController extends JsonUtil {
                 return dataToJson(e.getMessage());
             }
 
+            driver.setId(UUID.randomUUID());
             Repositories.drivers().add(driver);
 
             session.stop();
@@ -83,7 +84,8 @@ public class DriverController extends JsonUtil {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        Driver driver = Repositories.drivers().get(req.params(":id"));
+        UUID uid = UUID.fromString(req.params(":id"));
+        Driver driver = Repositories.drivers().get(uid);
         Driver validationDriver = (Driver) driver.clone();
 
         try{
@@ -125,7 +127,8 @@ public class DriverController extends JsonUtil {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        Driver driver = Repositories.drivers().get(req.params(":id"));
+        UUID uid = UUID.fromString(req.params(":id"));
+        Driver driver = Repositories.drivers().get(uid);
         Repositories.drivers().delete(driver);
 
         session.stop();

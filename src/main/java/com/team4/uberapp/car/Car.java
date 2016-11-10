@@ -36,6 +36,7 @@ public class Car implements Validable {
     private String carType;
     private int maxPassengers;
     private String validRideTypes;  // String Array Values are ECONOMY, PREMIUM, EXECUTIVE
+    private UUID driverId;
 
     @SuppressWarnings("UnusedDeclaration")
     protected Car() {
