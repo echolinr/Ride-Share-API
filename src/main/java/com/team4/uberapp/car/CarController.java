@@ -39,12 +39,11 @@ public class CarController {
         res.status(200);
         res.type("application/json");
         if (cars.size() == 0) {
-            return "No cars";
+            return JsonUtil.dataToJson("No cars");
         } else {
-            //return car.size();
-            //return JsonUtil.dataToJson(car);
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            return gson.toJson(cars);
+            return JsonUtil.dataToJson(cars);
+            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            //return gson.toJson(cars);
         }
 
     };
@@ -67,7 +66,7 @@ public class CarController {
         res.type("application/json");
         if (car == null) {
             res.status(404); // 404 Not found
-            return "Car: " + req.params(":id") +" not found";
+            return JsonUtil.dataToJson("Car: " + req.params(":id") +" not found");
         } else {
             res.status(200);
             return JsonUtil.dataToJson(car);
@@ -82,9 +81,11 @@ public class CarController {
         Repositories.initialise(new MongoRepositories(session));
 
         try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            Car car = mapper.readValue(req.body(), Car.class);
+            ObjectMapper mapper = new ObjectMapper();
+            Car car = mapper.readValue(req.body(), Car.class);
+            car.setId(UUID.randomUUID());
 
+/*
             Car car = new Car("foo", "foo", "foo","foo",0,"foo" );
             int i =0;
             JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
@@ -123,7 +124,7 @@ public class CarController {
                 car.setMaxPassengers(gson.fromJson(jsonObject.get("maxPassengers"), Integer.class));
                 i = 1;
             }
-
+*/
             try {
                 car.isValid();
             } catch (Exception e){
@@ -137,13 +138,14 @@ public class CarController {
             session.stop();
 
             //prepare return result
-            res.status(200);
             res.type("application/json");
+            res.status(200);
             return JsonUtil.dataToJson(car);
         }  catch (Exception e){
             session.stop();
+            res.type("application/json");
             res.status(400);
-            return e.getMessage();
+            return JsonUtil.dataToJson(e.getMessage());
         }
     };
 
@@ -164,13 +166,13 @@ public class CarController {
             res.status(404); // 404 Not found
             // close database connection
             session.stop();
-            return "Car: " + req.params(":id") +" not found";
+            return JsonUtil.dataToJson("Car: " + req.params(":id") +" not found");
         } else {
             Repositories.cars().delete(car);
             // close database connection
             session.stop();
             res.status(200);
-            return "Car: " + req.params(":id") +" deleted";
+            return JsonUtil.dataToJson("Car: " + req.params(":id") +" deleted");
         }
     };
 
@@ -189,8 +191,9 @@ public class CarController {
             res.status(404); // 404 Not found
             // close database connection
             session.stop();
-            return "Car: " + req.params(":id") +" not found";
+            return JsonUtil.dataToJson("Car: " + req.params(":id") +" not found");
         } else {
+            /*
             int i =0;
             JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
             Gson gson = new Gson();
@@ -228,13 +231,74 @@ public class CarController {
                 car.setMaxPassengers(gson.fromJson(jsonObject.get("maxPassengers"), Integer.class));
                 i = 1;
             }
+            */
 
-            session.stop();
-            res.status(200);
-            if (i !=0) {
-                return "Car: " + req.params(":id") +" updated" ;
-            } else {
-                return "Car" + req.params(":id") + "incorrect params" + req.body();
+            // clone a passenger for validation purpose
+            Car validationCar = (Car) car.clone();
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                Car updateCar = mapper.readValue(req.body(), Car.class);
+
+                // make
+                if (updateCar.getMake() != null) {
+                    if (!updateCar.getMake().isEmpty()) {
+                        validationCar.setMake(updateCar.getMake());
+                    }
+                }
+                // model
+                if (updateCar.getModel() != null) {
+                    if (!updateCar.getModel().isEmpty()) {
+                        validationCar.setModel(updateCar.getModel());
+                    }
+                }
+                // license
+                if (updateCar.getCarType() != null) {
+                    if (!updateCar.getCarType().isEmpty()) {
+                        validationCar.setCarType(updateCar.getCarType());
+                    }
+                }
+                // color
+                if (updateCar.getColor() != null) {
+                    if (!updateCar.getColor().isEmpty()) {
+                        validationCar.setColor(updateCar.getColor());
+                    }
+                }
+                // validRideTypes
+                if (updateCar.getValidRideTypes() != null) {
+                    if (!updateCar.getValidRideTypes().isEmpty()) {
+                        validationCar.setValidRideTypes(updateCar.getValidRideTypes());
+                    }
+                }
+                // maxPassenger
+                if (updateCar.getMaxPassengers() != 0) {
+                    validationCar.setMaxPassengers(updateCar.getMaxPassengers());
+                }
+
+                //validation
+                try {
+                    validationCar.isValid();
+                } catch (Exception e) {
+                    session.stop();
+                    res.type("application/json");
+                    return  JsonUtil.dataToJson(e.getMessage());
+                }
+
+                //update value
+                car.setMake(validationCar.getMake());
+                car.setModel(validationCar.getModel());
+                car.setLicense(validationCar.getLicense());
+                car.setCarType(validationCar.getCarType());
+                car.setMaxPassengers(validationCar.getMaxPassengers());
+                car.setColor(validationCar.getColor());
+                car.setValidRideTypes(validationCar.getValidRideTypes());
+                session.stop();
+                res.type("application/json");
+                return JsonUtil.dataToJson("Car: " + req.params(":id") +" updated") ;
+            } catch (JsonParseException e) {
+                session.stop();
+                res.type("application/json");
+                res.status(400);
+                return JsonUtil.dataToJson(e.getMessage());
             }
         }
     };

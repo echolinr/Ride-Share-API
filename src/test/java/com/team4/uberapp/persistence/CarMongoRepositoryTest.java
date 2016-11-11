@@ -38,7 +38,7 @@ public class CarMongoRepositoryTest {
 
     @Test
     public void canAdd() {
-        Car car = new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "ECONOMY");
+        Car car = new Car("vw", "beetle", "5PVXXX", "Sedan", 4,"white", "ECONOMY");
         Repositories.cars().add(car);
         withRepository.cleanSession();
 
@@ -50,12 +50,13 @@ public class CarMongoRepositoryTest {
         assertThat(carFound.getModel()).isEqualTo("beetle");
         assertThat(carFound.getLicense()).isEqualTo("5PVXXX");
         assertThat(carFound.getMaxPassengers() == 4);
+        assertThat(carFound.getColor()).isEqualTo("white");
         assertThat(carFound.getValidRideTypes()).isEqualTo("ECONOMY");
     }
 
     @Test
     public void canDelete() {
-        Car car = new Car("toyota", "camery", "7WZXXX", "Sedan", 4, "PREMIUM" );
+        Car car = new Car("toyota", "camery", "7WZXXX", "Sedan", 4, "white", "PREMIUM" );
         Repositories.cars().add(car);
 
         Repositories.cars().delete(car);
@@ -66,8 +67,8 @@ public class CarMongoRepositoryTest {
 
     @Test
     public void canGetAll() {
-        Repositories.cars().add( new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "ECONOMY"));
-        Repositories.cars().add(new Car("toyota", "camery", "7WZXXX", "Sedan", 4, "PREMIUM"));
+        Repositories.cars().add( new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "white", "ECONOMY"));
+        Repositories.cars().add(new Car("toyota", "camery", "7WZXXX", "Sedan", 4,"white",  "PREMIUM"));
         withRepository.cleanSession();
 
         List<Car> cars = Repositories.cars().all();

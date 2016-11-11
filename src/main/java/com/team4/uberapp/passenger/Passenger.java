@@ -4,6 +4,7 @@ import com.team4.uberapp.domain.Validable;
 import lombok.Data;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by lzhai on 2016/11/10.
@@ -79,18 +80,18 @@ public class Passenger implements Validable, Cloneable {
         //emailAddress
 
         {
-        //    final Pattern pattern = Pattern.compile("/[a-zA-Z0-9_.\\-]+\\@[a-zA-Z](([a-zA-Z0-9-]+).)*/");
-          //  if (!pattern.matcher(this.emailAddress).matches()) {
-            //    throw new Exception("Invalid emailAddress");
-           // }
+            Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+           if (pattern.matcher(this.emailAddress).matches() == false) {
+               throw new Exception("Invalid emailAddress");
+            }
         }
 
         //phone#
         {
-            //final Pattern pattern = Pattern.compile("/^\\(?([0-9]{3})\\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/");
-           // if (!pattern.matcher(this.phoneNumber).matches()) {
-           //     throw new Exception("Invalid phone #");
-           // }
+            Pattern pattern = Pattern.compile("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}");
+            if (pattern.matcher(this.phoneNumber).matches() == false) {
+                throw new Exception("Invalid phone #");
+            }
         }
 
         return true;

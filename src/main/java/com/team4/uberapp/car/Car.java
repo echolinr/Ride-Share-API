@@ -24,6 +24,8 @@ package com.team4.uberapp.car;
 import com.team4.uberapp.domain.Validable;
 import lombok.Data;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -36,6 +38,7 @@ public class Car implements Validable, Cloneable {
     private String license;
     private String carType;
     private int maxPassengers;
+    private String color;
     private String validRideTypes;  // String Array Values are ECONOMY, PREMIUM, EXECUTIVE
     private UUID driverId;
 
@@ -44,21 +47,44 @@ public class Car implements Validable, Cloneable {
         // for mongolink
     }
 
-    public Car(String make, String model, String license, String carType, int maxPassengers, String validRideTypes) {
+    public Car(String make, String model, String license, String carType, int maxPassengers, String color, String validRideTypes) {
         this.id = UUID.randomUUID();
         this.make   = make;
         this.model  =  model;
         this.license    = license;
         this.carType    = carType;
         this.maxPassengers  = maxPassengers;
+        this.color = color;
         this.validRideTypes = validRideTypes;
         System.out.println( make+ model + license+ carType+ maxPassengers+validRideTypes);
     }
 
-    public boolean isValid() throws Exception{
+    public boolean isValid() throws Exception {
         //Could set up any additional validation rule
-        if (this.license.length() < 8){
-            throw new Exception("The License Plate Should Have At Least 8 Characters");
+        if (this.make.length() > 50) {
+            throw new Exception("make at most 50 Characters");
+        }
+        if (this.license.length() > 10) {
+            throw new Exception("License Plate at most 10 Characters");
+        }
+        if (this.model.length() > 50) {
+            throw new Exception("Model at most 50 Characters");
+        }
+        if (this.carType.length() > 10) {
+            throw new Exception("carType at most 10 Characters");
+        }
+        if (this.maxPassengers <=0 ) {
+            throw new Exception("maxPassengers should greater than 0");
+        }
+        if (this.color.length() > 10) {
+            throw new Exception("color at most 10 Characters");
+        }
+        {
+            final List<String> rideTypes = Arrays.asList("ECONOMY", "PREMIUM", "EXECUTIVE");
+            if (!rideTypes.contains(this.validRideTypes)) {
+                throw new Exception("not validRideTypes");
+            }
+
         }
         return true;
     }

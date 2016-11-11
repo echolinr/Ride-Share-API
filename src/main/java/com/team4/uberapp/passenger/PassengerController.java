@@ -1,8 +1,7 @@
 package com.team4.uberapp.passenger;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
@@ -26,7 +25,7 @@ public class PassengerController {
 
         List<Passenger> passengers = Repositories.passengers().all();
 
-            /* close database connection */
+        /* close database connection */
         session.stop();
         res.status(200);
         return JsonUtil.dataToJson(passengers);
@@ -66,71 +65,9 @@ public class PassengerController {
         Repositories.initialise(new MongoRepositories(session));
 
         try {
-//            ObjectMapper mapper = new ObjectMapper();
-//            Car car = mapper.readValue(req.body(), Car.class);
-
-            Passenger passenger = new Passenger("foo", "foo", "foo@foo.com","foofoofoo","foo","foo","foo","null","00000","123-456-7890" );
-            int i =0;
-            JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
-            Gson gson = new Gson();
-
-            // get firstName
-            if (jsonObject.get("firstName") != null) {
-                passenger.setFirstName(gson.fromJson(jsonObject.get("firstName"), String.class));
-                i = 1;
-            }
-            // get lastName
-            if (jsonObject.get("lastName") != null) {
-                passenger.setLastName(gson.fromJson(jsonObject.get("lastName"), String.class));
-                i = 1;
-            }
-            // get emailAddress
-            if (jsonObject.get("emailAddress") != null) {
-                passenger.setEmailAddress(gson.fromJson(jsonObject.get("emailAddress"), String.class));
-                i = 1;
-            }
-
-            // get password: should convert to hash?
-            if (jsonObject.get("password") != null) {
-                passenger.setPassword(gson.fromJson(jsonObject.get("password"), String.class));
-                i = 1;
-            }
-
-            // get addressLine1
-            if (jsonObject.get("addressLine1") != null) {
-                passenger.setAddressLine1(gson.fromJson(jsonObject.get("addressLine1"), String.class));
-                i = 1;
-            }
-
-            // get addressLine2
-            if (jsonObject.get("addressLine2") != null) {
-                passenger.setAddressLine2(gson.fromJson(jsonObject.get("addressLine2"), String.class));
-                i = 1;
-            }
-
-            // get city
-            if (jsonObject.get("city") != null) {
-                passenger.setCity(gson.fromJson(jsonObject.get("city"), String.class));
-                i = 1;
-            }
-
-            // get state
-            if (jsonObject.get("state") != null) {
-                passenger.setState(gson.fromJson(jsonObject.get("state"), String.class));
-                i = 1;
-            }
-
-            // get zip
-            if (jsonObject.get("zip") != null) {
-                passenger.setZip(gson.fromJson(jsonObject.get("zip"), String.class));
-                i = 1;
-            }
-
-            // get state
-            if (jsonObject.get("phoneNumber") != null) {
-                passenger.setPhoneNumber(gson.fromJson(jsonObject.get("phoneNumber"), String.class));
-                i = 1;
-            }
+            ObjectMapper mapper = new ObjectMapper();
+            Passenger passenger = mapper.readValue(req.body(), Passenger.class);
+            passenger.setId(UUID.randomUUID());
 
             try {
                 passenger.isValid();
@@ -141,7 +78,6 @@ public class PassengerController {
             }
 
             // after validation, we should convert password to hash????
-
             Repositories.passengers().add(passenger);
 
             // close database connection
@@ -197,7 +133,6 @@ public class PassengerController {
         UUID uid = UUID.fromString(req.params(":id"));
         Passenger passenger = Repositories.passengers().get(uid);
 
-
         if (passenger == null) {
             // close database connection
             session.stop();
@@ -205,15 +140,109 @@ public class PassengerController {
             res.type("application/json");
             return JsonUtil.dataToJson("Passenger: " + req.params(":id") +" not found");
         } else {
+            // clone a passenger for validation purpose
+            Passenger validationPassenger = (Passenger) passenger.clone();
+
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                Passenger updatePassenger = mapper.readValue(req.body(), Passenger.class);
+
+                // firstName
+                if (updatePassenger.getFirstName() != null) {
+                    if (!updatePassenger.getFirstName().isEmpty()) {
+                        validationPassenger.setFirstName(updatePassenger.getFirstName());
+                    }
+                }
+                // lastName
+                if (updatePassenger.getLastName() != null) {
+                    if (!updatePassenger.getLastName().isEmpty()) {
+                        validationPassenger.setLastName(updatePassenger.getLastName());
+                    }
+                }
+                // emailAddress
+                if (updatePassenger.getEmailAddress() != null) {
+                    if (!updatePassenger.getEmailAddress().isEmpty()) {
+                        validationPassenger.setEmailAddress(updatePassenger.getEmailAddress());
+                    }
+                }
+                // password: we may need special handle on password later
+                if (updatePassenger.getPassword() != null) {
+                    if (!updatePassenger.getPassword().isEmpty()) {
+                        validationPassenger.setPassword(updatePassenger.getPassword());
+                    }
+                }
+
+                // addressLine1
+                if (updatePassenger.getAddressLine1() != null) {
+                    if (!updatePassenger.getAddressLine1().isEmpty()) {
+                        validationPassenger.setAddressLine1(updatePassenger.getAddressLine1());
+                    }
+                }
+                // addressLine2
+                if (updatePassenger.getAddressLine2() != null) {
+                    if (!updatePassenger.getAddressLine2().isEmpty()) {
+                        validationPassenger.setAddressLine2(updatePassenger.getAddressLine2());
+                    }
+                }
+                // city
+                if (updatePassenger.getCity() != null) {
+                    if (!updatePassenger.getCity().isEmpty()) {
+                        validationPassenger.setCity(updatePassenger.getCity());
+                    }
+                }
+                // state
+                if (updatePassenger.getState() != null) {
+                    if (!updatePassenger.getState().isEmpty()) {
+                        validationPassenger.setState(updatePassenger.getState());
+                    }
+                }
+                // zip
+                if (updatePassenger.getZip() != null) {
+                    if (!updatePassenger.getZip().isEmpty()) {
+                        validationPassenger.setZip(updatePassenger.getZip());
+                    }
+                }
+                // phoneNumber
+                if (updatePassenger.getPhoneNumber() != null) {
+                    if (!updatePassenger.getPhoneNumber().isEmpty()) {
+                        validationPassenger.setPhoneNumber(updatePassenger.getPhoneNumber());
+                    }
+                }
+
+                //validation
+                try {
+                    validationPassenger.isValid();
+                } catch (Exception e) {
+                    session.stop();
+                    res.type("application/json");
+                    return  JsonUtil.dataToJson(e.getMessage());
+                }
+
+                //update value
+                passenger.setFirstName(validationPassenger.getFirstName());
+                passenger.setLastName(validationPassenger.getLastName());
+                passenger.setEmailAddress(validationPassenger.getEmailAddress());
+                passenger.setPassword(validationPassenger.getPassword());
+                passenger.setAddressLine1(validationPassenger.getAddressLine1());
+                passenger.setAddressLine2(validationPassenger.getAddressLine2());
+                passenger.setCity(validationPassenger.getCity());
+                passenger.setState(validationPassenger.getState());
+                passenger.setZip(validationPassenger.getZip());
+                passenger.setPhoneNumber(validationPassenger.getPhoneNumber());
+                session.stop();
+                res.type("application/json");
+                return JsonUtil.dataToJson("Passenger:" + req.params(":id") +" updated!");
+            } catch (JsonParseException e) {
+                session.stop();
+                res.type("application/json");
+                res.status(400);
+                return JsonUtil.dataToJson(e.getMessage());
+            }
+/*
             int i =0;
             JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
             Gson gson = new Gson();
 
-            // get firstName
-            if (jsonObject.get("firstName") != null) {
-                passenger.setFirstName(gson.fromJson(jsonObject.get("firstName"), String.class));
-                i = 1;
-            }
             // get lastName
             if (jsonObject.get("lastName") != null) {
                 passenger.setLastName(gson.fromJson(jsonObject.get("lastName"), String.class));
@@ -276,6 +305,7 @@ public class PassengerController {
             } else {
                 return JsonUtil.dataToJson("Passenger" + req.params(":id") + "incorrect params" + req.body());
             }
+*/
         }
     };
 
