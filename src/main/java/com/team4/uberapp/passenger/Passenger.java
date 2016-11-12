@@ -46,27 +46,27 @@ public class Passenger implements Validable, Cloneable {
 
     public boolean isValid() throws Exception{
         //valid firstName length
-        if (this.firstName.length() >50){
+        if (this.firstName.isEmpty() || this.firstName.length() >50){
             throw new Exception("The firstName length should not greater than 50 Characters");
         }
         //valid lastName length
-        if (this.lastName.length() > 50) {
+        if (this.lastName.isEmpty() || this.lastName.length() > 50) {
             throw new Exception("The lastName length should not greater than 50 Characters");
         }
         //valid addressLine1 length
-        if (this.addressLine1.length() >100){
+        if (this.addressLine1.isEmpty() || this.addressLine1.length() >100){
             throw new Exception("The firstName length should not greater than 50 Characters");
         }
-        //valid addressLine2 length
+        //valid addressLine2 length, optional, could be empty
         if (this.addressLine2.length() > 100) {
             throw new Exception("The lastName length should not greater than 50 Characters");
         }
         //valid passowrd
-        if (this.password.length()<8 || this.password.length()>20) {
+        if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
             throw new Exception("The password length should >8 & <20");
         }
         //city
-        if (this.city.length() > 50) {
+        if (this.city.isEmpty() || this.city.length() > 50) {
             throw new Exception("The city length should not greater than 50 Characters");
         }
         //state

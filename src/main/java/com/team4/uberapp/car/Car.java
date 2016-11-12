@@ -61,22 +61,22 @@ public class Car implements Validable, Cloneable {
 
     public boolean isValid() throws Exception {
         //Could set up any additional validation rule
-        if (this.make.length() > 50) {
+        if (this.make.isEmpty() || this.make.length() > 50) {
             throw new Exception("make at most 50 Characters");
         }
-        if (this.license.length() > 10) {
+        if (this.license.isEmpty() || this.license.length() > 10) {
             throw new Exception("License Plate at most 10 Characters");
         }
-        if (this.model.length() > 50) {
+        if (this.model.isEmpty() || this.model.length() > 50) {
             throw new Exception("Model at most 50 Characters");
         }
-        if (this.carType.length() > 10) {
+        if (this.carType.isEmpty() || this.carType.length() > 10) {
             throw new Exception("carType at most 10 Characters");
         }
         if (this.maxPassengers <=0 ) {
             throw new Exception("maxPassengers should greater than 0");
         }
-        if (this.color.length() > 10) {
+        if (this.color.isEmpty() ||  this.color.length() > 10) {
             throw new Exception("color at most 10 Characters");
         }
         {

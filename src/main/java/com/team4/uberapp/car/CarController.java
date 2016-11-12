@@ -2,18 +2,12 @@ package com.team4.uberapp.car;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
-
-import com.team4.uberapp.persistence.*;
 import com.team4.uberapp.driver.Driver;
-import org.mongolink.MongoSession;
-
+import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.JsonUtil;
+import org.mongolink.MongoSession;
 import spark.Route;
 
 import java.util.List;
@@ -315,7 +309,7 @@ public class CarController {
 
         if(driver == null) {
             res.status(404);
-            return "Ride: " + driverId +" not found";
+            return "Driver: " + driverId +" not found";
         }
 
         try{

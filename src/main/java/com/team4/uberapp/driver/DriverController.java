@@ -42,7 +42,13 @@ public class DriverController extends JsonUtil {
         session.stop();
         res.status(200);
         res.type("application/json");
-        return dataToJson(driver);
+        if (driver == null) {
+            res.status(404); // 404 Not found
+            return JsonUtil.dataToJson("Driver: " + req.params(":id") +" not found");
+        } else {
+            res.status(200);
+            return JsonUtil.dataToJson(driver);
+        }
     };
 
     public static Route create = (req, res) -> {
@@ -92,9 +98,77 @@ public class DriverController extends JsonUtil {
             ObjectMapper mapper = new ObjectMapper();
             Driver updatedDriver = mapper.readValue(req.body(), Driver.class);
 
-            if(updatedDriver.getName() != null){
-                if(!updatedDriver.getName().isEmpty()){
-                    validationDriver.setName(updatedDriver.getName());
+            // firstName
+            if (updatedDriver.getFirstName() != null) {
+                if (!updatedDriver.getFirstName().isEmpty()) {
+                    validationDriver.setFirstName(updatedDriver.getFirstName());
+                }
+            }
+            // lastName
+            if (updatedDriver.getLastName() != null) {
+                if (!updatedDriver.getLastName().isEmpty()) {
+                    validationDriver.setLastName(updatedDriver.getLastName());
+                }
+            }
+            // emailAddress
+            if (updatedDriver.getEmailAddress() != null) {
+                if (!updatedDriver.getEmailAddress().isEmpty()) {
+                    validationDriver.setEmailAddress(updatedDriver.getEmailAddress());
+                }
+            }
+            // password: we may need special handle on password later
+            if (updatedDriver.getPassword() != null) {
+                if (!updatedDriver.getPassword().isEmpty()) {
+                    validationDriver.setPassword(updatedDriver.getPassword());
+                }
+            }
+
+            // addressLine1
+            if (updatedDriver.getAddressLine1() != null) {
+                if (!updatedDriver.getAddressLine1().isEmpty()) {
+                    validationDriver.setAddressLine1(updatedDriver.getAddressLine1());
+                }
+            }
+            // addressLine2
+            if (updatedDriver.getAddressLine2() != null) {
+                if (!updatedDriver.getAddressLine2().isEmpty()) {
+                    validationDriver.setAddressLine2(updatedDriver.getAddressLine2());
+                }
+            }
+            // city
+            if (updatedDriver.getCity() != null) {
+                if (!updatedDriver.getCity().isEmpty()) {
+                    validationDriver.setCity(updatedDriver.getCity());
+                }
+            }
+            // state
+            if (updatedDriver.getState() != null) {
+                if (!updatedDriver.getState().isEmpty()) {
+                    validationDriver.setState(updatedDriver.getState());
+                }
+            }
+            // zip
+            if (updatedDriver.getZip() != null) {
+                if (!updatedDriver.getZip().isEmpty()) {
+                    validationDriver.setZip(updatedDriver.getZip());
+                }
+            }
+            // phoneNumber
+            if (updatedDriver.getPhoneNumber() != null) {
+                if (!updatedDriver.getPhoneNumber().isEmpty()) {
+                    validationDriver.setPhoneNumber(updatedDriver.getPhoneNumber());
+                }
+            }
+            // drivingLicense
+            if (updatedDriver.getDrivingLicense() != null) {
+                if (!updatedDriver.getDrivingLicense().isEmpty()) {
+                    validationDriver.setDrivingLicense(updatedDriver.getDrivingLicense());
+                }
+            }
+            // licensedState
+            if (updatedDriver.getLicensedState() != null) {
+                if (!updatedDriver.getLicensedState().isEmpty()) {
+                    validationDriver.setLicensedState(updatedDriver.getLicensedState());
                 }
             }
 
@@ -107,12 +181,22 @@ public class DriverController extends JsonUtil {
                 return dataToJson(e.getMessage());
             }
 
-            driver.setName(validationDriver.getName());
+            //update value
+            driver.setFirstName(validationDriver.getFirstName());
+            driver.setLastName(validationDriver.getLastName());
+            driver.setEmailAddress(validationDriver.getEmailAddress());
+            driver.setPassword(validationDriver.getPassword());
+            driver.setAddressLine1(validationDriver.getAddressLine1());
+            driver.setAddressLine2(validationDriver.getAddressLine2());
+            driver.setCity(validationDriver.getCity());
+            driver.setState(validationDriver.getState());
+            driver.setZip(validationDriver.getZip());
+            driver.setPhoneNumber(validationDriver.getPhoneNumber());
+            driver.setDrivingLicense(validationDriver.getDrivingLicense());
+            driver.setLicensedState(validationDriver.getLicensedState());
             session.stop();
-            res.status(200);
             res.type("application/json");
-            return dataToJson("Ride Updated");
-
+            return JsonUtil.dataToJson("Driver:" + req.params(":id") +" updated!");
         }catch (JsonParseException e){
             session.stop();
             res.status(400);
@@ -134,6 +218,6 @@ public class DriverController extends JsonUtil {
         session.stop();
         res.status(200);
         res.type("application/json");
-        return dataToJson("Ride Deleted");
+        return dataToJson("Driver Deleted");
     };
 }
