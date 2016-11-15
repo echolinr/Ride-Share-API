@@ -19,20 +19,12 @@ public class UberAppMain {
         /* http:a.b.c.d:8080/v1/ */
         get(versionURI +"/", (req, res) -> "Hello UberAPP!");
 
-        // list all cars
-        get(versionURI +"/cars", CarController.getAll);
-
-        // get car by id : v1/cars/:ID
-        get(versionURI +"/cars/:id", CarController.getById);
-
-        /* post: /cars */
-        post(versionURI + "/cars", CarController.create);
-
-        // delete car by id : v1/cars/:ID
-        delete(versionURI +"/cars/:id", CarController.delById);
-
-        // patch car by id : v1/cars/:ID
-        patch(versionURI +"/cars/:id", CarController.update);
+        // Cars
+        get(versionURI +"/cars", CarController.getAll);        // get all cars: v1/cars
+        get(versionURI +"/cars/:id", CarController.getById); // get car by id : v1/cars/:id
+        post(versionURI + "/cars", CarController.create);   // post  /cars
+        delete(versionURI +"/cars/:id", CarController.delById); // delete car by id: v1/cars/:id
+        patch(versionURI +"/cars/:id", CarController.update); // patch car by id : v1/cars/:id
 
         // Drivers
         get(versionURI +"/drivers", DriverController.getAll);

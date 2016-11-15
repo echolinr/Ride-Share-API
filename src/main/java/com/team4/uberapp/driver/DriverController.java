@@ -6,10 +6,14 @@ import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.MongoConfiguration;
 import org.mongolink.MongoSession;
 import com.team4.uberapp.persistence.MongoRepositories;
+import org.mongolink.domain.criteria.Criteria;
+import org.mongolink.domain.criteria.Order;
 import spark.Route;
 import com.team4.uberapp.util.JsonUtil;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -18,12 +22,51 @@ import java.util.UUID;
 public class DriverController extends JsonUtil {
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
-
         session.start();
         Repositories.initialise(new MongoRepositories(session));
+        List<Driver> drivers;
 
-        List<Driver> drivers = Repositories.drivers().all();
-
+        if (req.queryParams().isEmpty()) {
+            drivers = Repositories.drivers().all();
+        } else {
+            Criteria criteria = session.createCriteria(Driver.class); // create criteria object
+            final List<String> queryFields = Arrays.asList("count", "offsetId", "sort", "sortOrder");
+            Set<String> queryParams = req.queryParams();
+            String querySort = null;
+            String querySortOrder = null;
+            for(String param : queryParams){
+                if (!queryFields.contains(param)) {
+                    session.stop();
+                    res.status(200);
+                    res.type("applicaiton/json");
+                    return JsonUtil.dataToJson("Wrong query params :" + param);
+                }
+                if (param.compareTo("count") == 0)  {
+                    criteria.limit(Integer.parseInt(req.queryParams(param)));
+                } else if (param.compareTo("offsetId") == 0) {
+                    criteria.skip(Integer.parseInt(req.queryParams(param)));
+                } else if (param.equalsIgnoreCase("sort") == true){
+                    querySort = new String(req.queryParams(param));
+                } else if (param.equalsIgnoreCase("sortOrder") == true) {
+                    querySortOrder = new String(req.queryParams(param));
+                }
+            }
+            // setup sort and sortOrder
+            if (querySort != null && querySortOrder != null) {
+                if (querySortOrder.equalsIgnoreCase("asc") == true) {
+                    criteria.sort(querySort, Order.ASCENDING);
+                } else {
+                    criteria.sort(querySort, Order.DESCENDING);
+                }
+            } else if (((querySort != null) && (querySortOrder == null)) ||
+                    ((querySort == null) && (querySortOrder != null)) ){
+                session.stop();
+                res.status(200);
+                res.type("applicaiton/json");
+                return JsonUtil.dataToJson("sort & sortOrder params must be in pair.");
+            }
+            drivers = criteria.list();
+        }
         session.stop();
         res.status(200);
         res.type("application/json");
