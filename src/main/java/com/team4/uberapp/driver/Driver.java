@@ -4,13 +4,15 @@ package com.team4.uberapp.driver;
  * Created by HectorGuo on 11/8/16.
  */
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team4.uberapp.domain.Validable;
-import lombok.*;
+import lombok.Data;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Data
+@JsonIgnoreProperties( { "password" })
 public class Driver implements Validable {
     private UUID id;
     private String name;
@@ -68,9 +70,9 @@ public class Driver implements Validable {
             throw new Exception("The lastName length should not greater than 50 Characters");
         }
         //valid passowrd
-        if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
-            throw new Exception("The password length should >8 & <20");
-        }
+        //if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
+        //    throw new Exception("The password length should >8 & <20");
+        //}
         //city
         if (this.city.isEmpty() ||  this.city.length() > 50) {
             throw new Exception("The city length should not greater than 50 Characters");

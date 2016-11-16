@@ -6,7 +6,7 @@ import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.driver.Driver;
 import com.team4.uberapp.persistence.MongoRepositories;
-import com.team4.uberapp.util.JsonUtil;
+import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
 import org.mongolink.domain.criteria.Order;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * Created by HectorGuo on 11/8/16.
  */
-public class CarController {
+public class CarController extends UberAppUtil {
     // GET /cars  Get all cars
     public static Route getAll = (req, res) -> {
         //initialize db connection
@@ -46,7 +46,7 @@ public class CarController {
                     session.stop();
                     res.status(200);
                     res.type("applicaiton/json");
-                    return JsonUtil.dataToJson("Wrong query params :" + param);
+                    return dataToJson("Wrong query params :" + param);
                 }
                 if (param.compareTo("count") == 0)  {
                     criteria.limit(Integer.parseInt(req.queryParams(param)));
@@ -70,7 +70,7 @@ public class CarController {
                 session.stop();
                 res.status(200);
                 res.type("applicaiton/json");
-                return JsonUtil.dataToJson("sort & sortOrder params must be in pair.");
+                return dataToJson("sort & sortOrder params must be in pair.");
             }
             cars = criteria.list();
         }
@@ -81,9 +81,9 @@ public class CarController {
         res.status(200);
         res.type("application/json");
         if (cars.size() == 0) {
-            return JsonUtil.dataToJson("No cars");
+            return dataToJson("No cars");
         } else {
-            return JsonUtil.dataToJson(cars);
+            return dataToJson(cars);
             //Gson gson = new GsonBuilder().setPrettyPrinting().create();
             //return gson.toJson(cars);
         }
@@ -107,10 +107,10 @@ public class CarController {
         res.type("application/json");
         if (car == null) {
             res.status(404); // 404 Not found
-            return JsonUtil.dataToJson("Car: " + req.params(":id") +" not found");
+            return dataToJson("Car: " + req.params(":id") +" not found");
         } else {
             res.status(200);
-            return JsonUtil.dataToJson(car);
+            return dataToJson(car);
         }
     };
 
@@ -170,7 +170,7 @@ public class CarController {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return JsonUtil.dataToJson(e.getMessage());
+                return dataToJson(e.getMessage());
             }
 
             Repositories.cars().add(car);
@@ -181,12 +181,12 @@ public class CarController {
             //prepare return result
             res.type("application/json");
             res.status(200);
-            return JsonUtil.dataToJson(car);
+            return dataToJson(car);
         }  catch (Exception e){
             session.stop();
             res.type("application/json");
             res.status(400);
-            return JsonUtil.dataToJson(e.getMessage());
+            return dataToJson(e.getMessage());
         }
     };
 
@@ -207,13 +207,13 @@ public class CarController {
             res.status(404); // 404 Not found
             // close database connection
             session.stop();
-            return JsonUtil.dataToJson("Car: " + req.params(":id") +" not found");
+            return dataToJson("Car: " + req.params(":id") +" not found");
         } else {
             Repositories.cars().delete(car);
             // close database connection
             session.stop();
             res.status(200);
-            return JsonUtil.dataToJson("Car: " + req.params(":id") +" deleted");
+            return dataToJson("Car: " + req.params(":id") +" deleted");
         }
     };
 
@@ -232,7 +232,7 @@ public class CarController {
             res.status(404); // 404 Not found
             // close database connection
             session.stop();
-            return JsonUtil.dataToJson("Car: " + req.params(":id") +" not found");
+            return dataToJson("Car: " + req.params(":id") +" not found");
         } else {
             /*
             int i =0;
@@ -321,7 +321,7 @@ public class CarController {
                 } catch (Exception e) {
                     session.stop();
                     res.type("application/json");
-                    return  JsonUtil.dataToJson(e.getMessage());
+                    return  dataToJson(e.getMessage());
                 }
 
                 //update value
@@ -334,12 +334,12 @@ public class CarController {
                 car.setValidRideTypes(validationCar.getValidRideTypes());
                 session.stop();
                 res.type("application/json");
-                return JsonUtil.dataToJson("Car: " + req.params(":id") +" updated") ;
+                return dataToJson("Car: " + req.params(":id") +" updated") ;
             } catch (JsonParseException e) {
                 session.stop();
                 res.type("application/json");
                 res.status(400);
-                return JsonUtil.dataToJson(e.getMessage());
+                return dataToJson(e.getMessage());
             }
         }
     };
@@ -367,7 +367,7 @@ public class CarController {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return JsonUtil.dataToJson(e.getMessage());
+                return dataToJson(e.getMessage());
             }
 
             car.setId(UUID.randomUUID());
@@ -377,13 +377,13 @@ public class CarController {
             session.stop();
             res.status(201);
             res.type("application/json");
-            return JsonUtil.dataToJson(car);
+            return dataToJson(car);
 
         }catch (JsonParseException e){
             session.stop();
             res.status(400);
             res.type("application/json");
-            return JsonUtil.dataToJson(e.getMessage());
+            return dataToJson(e.getMessage());
         }
     };
 
@@ -414,7 +414,7 @@ public class CarController {
             return "No cars";
         } else {
             res.type("application/json");
-            return JsonUtil.dataToJson(matchedCar);
+            return dataToJson(matchedCar);
         }
     };
 }

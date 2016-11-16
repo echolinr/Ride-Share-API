@@ -1,5 +1,6 @@
 package com.team4.uberapp.passenger;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team4.uberapp.domain.Validable;
 import lombok.Data;
 
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
  * Created by lzhai on 2016/11/10.
  */
 @Data
+@JsonIgnoreProperties( { "password" })
 public class Passenger implements Validable, Cloneable {
     private UUID id;
     private String firstName; // maximum 50 characters
@@ -62,9 +64,9 @@ public class Passenger implements Validable, Cloneable {
             throw new Exception("The lastName length should not greater than 50 Characters");
         }
         //valid passowrd
-        if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
-            throw new Exception("The password length should >8 & <20");
-        }
+        //if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
+        //    throw new Exception("The password length should >8 & <20");
+       // }
         //city
         if (this.city.isEmpty() || this.city.length() > 50) {
             throw new Exception("The city length should not greater than 50 Characters");

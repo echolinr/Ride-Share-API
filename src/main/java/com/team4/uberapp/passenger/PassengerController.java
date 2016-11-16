@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
-import com.team4.uberapp.util.JsonUtil;
+import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
 import org.mongolink.domain.criteria.Order;
+import org.mongolink.domain.criteria.Restrictions;
 import spark.Route;
 
 import java.util.Arrays;
@@ -19,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by lzhai on 2016/11/10.
  */
-public class PassengerController {
+public class PassengerController extends UberAppUtil {
     // GET /passengers  Get all passengers
     public static Route getAll = (req, res) -> {
         //initialize db connection
@@ -41,7 +42,7 @@ public class PassengerController {
                     session.stop();
                     res.status(200);
                     res.type("applicaiton/json");
-                    return JsonUtil.dataToJson("Wrong query params :" + param);
+                    return dataToJson("Wrong query params :" + param);
                 }
                 if (param.compareTo("count") == 0)  {
                     criteria.limit(Integer.parseInt(req.queryParams(param)));
@@ -65,14 +66,14 @@ public class PassengerController {
                 session.stop();
                 res.status(200);
                 res.type("applicaiton/json");
-                return JsonUtil.dataToJson("sort & sortOrder params must be in pair.");
+                return dataToJson("sort & sortOrder params must be in pair.");
             }
             passengers = criteria.list();
         }
         /* close database connection */
         session.stop();
         res.status(200);
-        return JsonUtil.dataToJson(passengers);
+        return dataToJson(passengers);
 
     };
 
@@ -94,10 +95,10 @@ public class PassengerController {
         res.type("application/json");
         if (passenger == null) {
             res.status(404); // 404 Not found
-            return JsonUtil.dataToJson("Passenger: " + req.params(":id") +" not found");
+            return dataToJson("Passenger: " + req.params(":id") +" not found");
         } else {
             res.status(200);
-            return JsonUtil.dataToJson(passenger);
+            return dataToJson(passenger);
         }
     };
 
@@ -111,31 +112,38 @@ public class PassengerController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             Passenger passenger = mapper.readValue(req.body(), Passenger.class);
-            passenger.setId(UUID.randomUUID());
-
             try {
                 passenger.isValid();
             } catch (Exception e){
                 res.status(400);
                 res.type("application/json");
-                return JsonUtil.dataToJson(e.getMessage());
+                return dataToJson(e.getMessage());
             }
 
-            // after validation, we should convert password to hash????
-            Repositories.passengers().add(passenger);
+            Criteria criteria = session.createCriteria(Passenger.class); // create criteria object
+            criteria.add(Restrictions.equals("emailAddress", passenger.getEmailAddress()));
+            // emailAddress for driver must be unique
+            if (criteria.list() == null || criteria.list().isEmpty()) {
+                passenger.setId(UUID.randomUUID()); //generate UUID
+                passenger.setPassword(hashPassword(passenger.getPassword()));
+                session.clear();
+                Repositories.passengers().add(passenger);
 
-            // close database connection
-            session.stop();
-
-            //prepare return result
-            res.type("application/json");
-            res.status(200);
-            return JsonUtil.dataToJson(passenger);
+                session.stop();
+                res.status(201);
+                res.type("application/json");
+                return dataToJson(passenger);
+            } else {
+                session.stop();
+                res.status(400);
+                res.type("application/json");
+                return dataToJson("Passenger has conflict email address： " + passenger.getEmailAddress());
+            }
         }  catch (Exception e){
             session.stop();
             res.type("application/json");
             res.status(400);
-            return JsonUtil.dataToJson(e.getMessage());
+            return dataToJson(e.getMessage());
         }
     };
 
@@ -156,14 +164,14 @@ public class PassengerController {
             session.stop();
             res.type("application/json");
             res.status(404); // 404 Not found
-            return JsonUtil.dataToJson("Passenger: " + req.params(":id") +" not found");
+            return dataToJson("Passenger: " + req.params(":id") +" not found");
         } else {
             Repositories.passengers().delete(passenger);
             // close database connection
             session.stop();
             res.type("application/json");
             res.status(200);
-            return JsonUtil.dataToJson("Passenger: " + req.params(":id") +" deleted");
+            return dataToJson("Passenger: " + req.params(":id") +" deleted");
         }
     };
     // PATCH /passengers/:id  Update passenger by id
@@ -182,7 +190,7 @@ public class PassengerController {
             session.stop();
             res.status(404); // 404 Not found
             res.type("application/json");
-            return JsonUtil.dataToJson("Passenger: " + req.params(":id") +" not found");
+            return dataToJson("Passenger: " + req.params(":id") +" not found");
         } else {
             // clone a passenger for validation purpose
             Passenger validationPassenger = (Passenger) passenger.clone();
@@ -259,7 +267,7 @@ public class PassengerController {
                 } catch (Exception e) {
                     session.stop();
                     res.type("application/json");
-                    return  JsonUtil.dataToJson(e.getMessage());
+                    return  dataToJson(e.getMessage());
                 }
 
                 //update value
@@ -275,12 +283,12 @@ public class PassengerController {
                 passenger.setPhoneNumber(validationPassenger.getPhoneNumber());
                 session.stop();
                 res.type("application/json");
-                return JsonUtil.dataToJson("Passenger:" + req.params(":id") +" updated!");
+                return dataToJson("Passenger:" + req.params(":id") +" updated!");
             } catch (JsonParseException e) {
                 session.stop();
                 res.type("application/json");
                 res.status(400);
-                return JsonUtil.dataToJson(e.getMessage());
+                return dataToJson(e.getMessage());
             }
 /*
             int i =0;

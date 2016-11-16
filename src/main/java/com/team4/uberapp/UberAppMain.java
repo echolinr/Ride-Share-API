@@ -4,6 +4,7 @@ import com.team4.uberapp.car.CarController;
 import com.team4.uberapp.driver.DriverController;
 import com.team4.uberapp.passenger.PassengerController;
 import com.team4.uberapp.ride.RideController;
+import com.team4.uberapp.userSession.UserSessionController;
 
 import static spark.Spark.*;
 
@@ -51,6 +52,23 @@ public class UberAppMain {
         post(versionURI + "/rides", RideController.create);
         delete(versionURI +"/rides/:id", RideController.delById);
         patch(versionURI +"/rides/:id", RideController.update);
+
+        get(versionURI +"/sessions", UserSessionController.getAll);        // get all cars: v1/cars
+        get(versionURI +"/sessions/:id", UserSessionController.getById); // get car by id : v1/cars/:id
+        post(versionURI + "/sessions", UserSessionController.create);   // post  /cars
+        delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
+
+        //add access control for later
+        /*
+        before((request,response)->{
+            String method = request.requestMethod();
+            if (method.equals("POST")) {
+                if (request.pathInfo().equals(versionURI+ "/rides") || request.pathInfo().equals(versionURI+"/cars")) {
+                    halt(401,"User unathorized");
+                }
+            }
+        });
+        */
     }
 
 }

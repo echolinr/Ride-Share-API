@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
-import com.team4.uberapp.util.JsonUtil;
+import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import spark.Route;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by HectorGuo on 11/8/16.
  */
-public class RideController extends JsonUtil {
+public class RideController extends UberAppUtil {
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 

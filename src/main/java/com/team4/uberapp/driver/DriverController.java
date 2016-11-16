@@ -2,14 +2,15 @@ package com.team4.uberapp.driver;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.MongoConfiguration;
-import org.mongolink.MongoSession;
+import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
+import com.team4.uberapp.util.UberAppUtil;
+import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
 import org.mongolink.domain.criteria.Order;
+import org.mongolink.domain.criteria.Restrictions;
 import spark.Route;
-import com.team4.uberapp.util.JsonUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by HectorGuo on 11/8/16.
  */
-public class DriverController extends JsonUtil {
+public class DriverController extends UberAppUtil {
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
         session.start();
@@ -39,7 +40,7 @@ public class DriverController extends JsonUtil {
                     session.stop();
                     res.status(200);
                     res.type("applicaiton/json");
-                    return JsonUtil.dataToJson("Wrong query params :" + param);
+                    return dataToJson("Wrong query params :" + param);
                 }
                 if (param.compareTo("count") == 0)  {
                     criteria.limit(Integer.parseInt(req.queryParams(param)));
@@ -63,7 +64,7 @@ public class DriverController extends JsonUtil {
                 session.stop();
                 res.status(200);
                 res.type("applicaiton/json");
-                return JsonUtil.dataToJson("sort & sortOrder params must be in pair.");
+                return dataToJson("sort & sortOrder params must be in pair.");
             }
             drivers = criteria.list();
         }
@@ -87,16 +88,15 @@ public class DriverController extends JsonUtil {
         res.type("application/json");
         if (driver == null) {
             res.status(404); // 404 Not found
-            return JsonUtil.dataToJson("Driver: " + req.params(":id") +" not found");
+            return dataToJson("Driver: " + req.params(":id") +" not found");
         } else {
             res.status(200);
-            return JsonUtil.dataToJson(driver);
+            return dataToJson(driver);
         }
     };
 
     public static Route create = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
-
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
@@ -111,14 +111,25 @@ public class DriverController extends JsonUtil {
                 return dataToJson(e.getMessage());
             }
 
-            driver.setId(UUID.randomUUID());
-            Repositories.drivers().add(driver);
+            Criteria criteria = session.createCriteria(Driver.class); // create criteria object
+            criteria.add(Restrictions.equals("emailAddress", driver.getEmailAddress()));
+            // emailAddress for driver must be unique
+            if (criteria.list() == null || criteria.list().isEmpty()) {
+                driver.setId(UUID.randomUUID()); //generate UUID for driver
+                driver.setPassword(hashPassword(driver.getPassword()));
+                //session.clear();
+                Repositories.drivers().add(driver);
 
-            session.stop();
-            res.status(201);
-            res.type("application/json");
-            return dataToJson(driver);
-
+                session.stop();
+                res.status(201);
+                res.type("application/json");
+                return dataToJson(driver);
+            } else {
+                session.stop();
+                res.status(400);
+                res.type("application/json");
+                return dataToJson("Driver has conflict email address： " + driver.getEmailAddress());
+            }
         }catch (JsonParseException e){
             session.stop();
             res.status(400);
@@ -159,10 +170,10 @@ public class DriverController extends JsonUtil {
                     validationDriver.setEmailAddress(updatedDriver.getEmailAddress());
                 }
             }
-            // password: we may need special handle on password later
+            // password
             if (updatedDriver.getPassword() != null) {
                 if (!updatedDriver.getPassword().isEmpty()) {
-                    validationDriver.setPassword(updatedDriver.getPassword());
+                    validationDriver.setPassword(hashPassword(updatedDriver.getPassword()));
                 }
             }
 
@@ -239,7 +250,7 @@ public class DriverController extends JsonUtil {
             driver.setLicensedState(validationDriver.getLicensedState());
             session.stop();
             res.type("application/json");
-            return JsonUtil.dataToJson("Driver:" + req.params(":id") +" updated!");
+            return dataToJson("Driver:" + req.params(":id") +" updated!");
         }catch (JsonParseException e){
             session.stop();
             res.status(400);

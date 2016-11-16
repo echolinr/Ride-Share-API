@@ -43,10 +43,15 @@ public abstract class Repositories {
         return instance.ridesRepository();
     }
 
+    public static UserSessionRepository userSessions() {
+        return instance.userSessionsRepository();
+    }
+
     protected abstract CarRepository carsRepository();
     protected abstract DriverRepository driversRepository();
     protected abstract PassengerRepository passengersRepository();
     protected abstract RideRepository ridesRepository();
+    protected abstract UserSessionRepository userSessionsRepository();
 
     private static Repositories instance;
 }
