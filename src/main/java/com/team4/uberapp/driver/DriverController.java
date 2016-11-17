@@ -127,30 +127,20 @@ public class DriverController extends UberAppUtil {
                     driver.setPassword(hashPassword(driver.getPassword()));
                     //session.clear();
                     Repositories.drivers().add(driver);
-
-<<<<<<< Updated upstream
-                    session.stop();
-                    res.status(201);
-                    res.type("application/json");
-                    return dataToJson(driver);
                 }
-=======
+
                 session.stop();
                 res.status(201);
                 res.type("application/json");
                 return dataToJson(driver);
+
             } else {
                 session.stop();
                 res.status(400);
                 res.type("application/json");
                 return ErrorReport.toJson(1001, "Driver has conflict email address： " + driver.getEmailAddress());
->>>>>>> Stashed changes
             }
-            // emailAddress is not unique for driver & passenger
-            session.stop();
-            res.status(400);
-            res.type("application/json");
-            return dataToJson("Driver/Passenger has conflict email address： " + driver.getEmailAddress());
+
         }catch (JsonParseException e){
             session.stop();
             res.status(400);
