@@ -75,7 +75,7 @@ public class UberAppUtil {
      * @param userId The account's plaintext password, as provided during a login request
      * @return String - generate token with username
      */
-    public static String createToken(String userId) {
+    public static String createToken(String userId, String userType) {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -92,6 +92,7 @@ public class UberAppUtil {
         customClaims.setIssuedAt(now);
         customClaims.setExpiration(new Date(System.currentTimeMillis() + tokenTTL));
         customClaims.put("userID", userId);
+        customClaims.put("userType", userType);
 
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder()
@@ -112,20 +113,25 @@ public class UberAppUtil {
      * 1) userID is contained in token
      * 2) token is no expired
      * @param jwtToken a jwt token
-     * @return String - userID in token if not expired or null
+     * @return AppUser - userID in token if not expired or null
      */
-    public static String validTokenUser(String jwtToken) {
+    public static AppUser validTokenUser(String jwtToken) {
         //This line will throw an exception if it is not a signed JWS (as expected)
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(tokenSecret))
-                .parseClaimsJws(jwtToken).getBody();
-        JsonObject jsonObject = (JsonObject) new JsonParser().parse(claims.toString());
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(tokenSecret))
+                    .parseClaimsJws(jwtToken).getBody();
+            JsonObject jsonObject = (JsonObject) new JsonParser().parse(claims.toString());
 
-        if ((claims.getExpiration().getTime() > System.currentTimeMillis()) && (jsonObject.get("userID")!=null) ) {
-            return jsonObject.get("userID").toString();
-        } else {
+            if ((claims.getExpiration().getTime() > System.currentTimeMillis()) && (jsonObject.get("userID")!=null) && (jsonObject.get("userType")!=null) ) {
+                return (new AppUser(jsonObject.get("userID").toString(),jsonObject.get("userType").toString()));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
             return null;
         }
+
         //System.out.println("ID: " + claims.getId());
         //System.out.println("Subject: " + claims.getSubject());
         //System.out.println("Issuer: " + claims.getIssuer());

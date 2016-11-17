@@ -6,6 +6,7 @@ import com.team4.uberapp.passenger.PassengerController;
 import com.team4.uberapp.ride.RideController;
 import com.team4.uberapp.userSession.UserSessionController;
 
+import static com.team4.uberapp.util.UberAppUtil.validTokenUser;
 import static spark.Spark.*;
 
 /**
@@ -59,16 +60,21 @@ public class UberAppMain {
         //delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
 
         //add access control for later
-        /*
         before((request,response)->{
             String method = request.requestMethod();
             if (method.equals("POST")) {
-                if (request.pathInfo().equals(versionURI+ "/rides") || request.pathInfo().equals(versionURI+"/cars")) {
-                    halt(401,"User unathorized");
+                if (request.pathInfo().equals(versionURI+ "/rides") ||
+                    request.pathInfo().equals(versionURI+ "/cars")    ||
+                    request.pathInfo().equals(versionURI+ "/drivers/")    ) {
+                    String token = request.queryParams("token");
+                    if (token == null) {
+                        halt(401, "User unathorized");
+                    } else if (validTokenUser(token) == null) {
+                        halt(401, "invalid token");
+                    
                 }
             }
         });
-        */
     }
 
 }

@@ -121,7 +121,7 @@ public class UserSessionController extends UberAppUtil {
                         // hash password
                         userSession.setPassword(hashPassword(userSession.getPassword()));
                         // generate session token
-                        userSession.setToken(createToken(driver.getId().toString()));
+                        userSession.setToken(createToken(driver.getId().toString(),"Driver"));
 
                         // store session， just for testing purpose, we don't need really put it into db
                         // will remove this part later
@@ -159,7 +159,7 @@ public class UserSessionController extends UberAppUtil {
                         // hash password
                         userSession.setPassword(hashPassword(userSession.getPassword()));
                         // generate session token
-                        userSession.setToken(createToken(passenger.getId().toString()));
+                        userSession.setToken(createToken(passenger.getId().toString(), "Passenger"));
 
                         // store session， just for testing purpose, we don't need really put it into db
                         // will remove this part later
