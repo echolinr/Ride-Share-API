@@ -22,6 +22,7 @@
 package com.team4.uberapp.car;
 
 import com.team4.uberapp.domain.Validable;
+import com.team4.uberapp.util.ErrorReport;
 import lombok.Data;
 
 import java.util.Arrays;
@@ -62,27 +63,27 @@ public class Car implements Validable, Cloneable {
     public boolean isValid() throws Exception {
         //Could set up any additional validation rule
         if (this.make.isEmpty() || this.make.length() > 50) {
-            throw new Exception("make at most 50 Characters");
+            throw new Exception(ErrorReport.toJson(2001, "make at most 50 Characters"));
         }
         if (this.license.isEmpty() || this.license.length() > 10) {
-            throw new Exception("License Plate at most 10 Characters");
+            throw new Exception(ErrorReport.toJson(2001, "License Plate at most 10 Characters"));
         }
         if (this.model.isEmpty() || this.model.length() > 50) {
-            throw new Exception("Model at most 50 Characters");
+            throw new Exception(ErrorReport.toJson(2001, "Model at most 50 Characters"));
         }
         if (this.carType.isEmpty() || this.carType.length() > 10) {
-            throw new Exception("carType at most 10 Characters");
+            throw new Exception(ErrorReport.toJson(2001, "carType at most 10 Characters"));
         }
         if (this.maxPassengers <=0 ) {
-            throw new Exception("maxPassengers should greater than 0");
+            throw new Exception(ErrorReport.toJson(2001, "maxPassengers should greater than 0"));
         }
         if (this.color.isEmpty() ||  this.color.length() > 10) {
-            throw new Exception("color at most 10 Characters");
+            throw new Exception(ErrorReport.toJson(2001, "color at most 10 Characters"));
         }
         {
             final List<String> rideTypes = Arrays.asList("ECONOMY", "PREMIUM", "EXECUTIVE");
             if (!rideTypes.contains(this.validRideTypes)) {
-                throw new Exception("not validRideTypes");
+                throw new Exception(ErrorReport.toJson(2001, "not validRideTypes"));
             }
 
         }

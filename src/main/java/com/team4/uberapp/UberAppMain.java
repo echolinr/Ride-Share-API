@@ -4,7 +4,7 @@ import com.team4.uberapp.car.CarController;
 import com.team4.uberapp.driver.DriverController;
 import com.team4.uberapp.passenger.PassengerController;
 import com.team4.uberapp.ride.RideController;
-import com.team4.uberapp.userSession.UserSessionController;
+//import com.team4.uberapp.userSession.UserSessionController;
 
 import static spark.Spark.*;
 
@@ -53,10 +53,21 @@ public class UberAppMain {
         delete(versionURI +"/rides/:id", RideController.delById);
         patch(versionURI +"/rides/:id", RideController.update);
 
+<<<<<<< Updated upstream
         get(versionURI +"/sessions", UserSessionController.getAll);        // get all cars: v1/cars
         post(versionURI + "/sessions", UserSessionController.create);   // post  /cars
         //get(versionURI +"/sessions/:id", UserSessionController.getById); // get car by id : v1/cars/:id
         //delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
+=======
+        // Rides' route points
+        get(versionURI + "/rides/:id/routePoints", RideController.getRoutePoints);
+        post(versionURI + "/rides/:id/routePoints", RideController.addRoutePoints);
+
+//        get(versionURI +"/sessions", UserSessionController.getAll);        // get all cars: v1/cars
+//        get(versionURI +"/sessions/:id", UserSessionController.getById); // get car by id : v1/cars/:id
+//        post(versionURI + "/sessions", UserSessionController.create);   // post  /cars
+//        delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
+>>>>>>> Stashed changes
 
         //add access control for later
         /*

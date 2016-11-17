@@ -84,8 +84,6 @@ public class CarController extends UberAppUtil {
             return dataToJson("No cars");
         } else {
             return dataToJson(cars);
-            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            //return gson.toJson(cars);
         }
 
     };
@@ -170,7 +168,7 @@ public class CarController extends UberAppUtil {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             Repositories.cars().add(car);
@@ -186,7 +184,7 @@ public class CarController extends UberAppUtil {
             session.stop();
             res.type("application/json");
             res.status(400);
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 
@@ -321,7 +319,7 @@ public class CarController extends UberAppUtil {
                 } catch (Exception e) {
                     session.stop();
                     res.type("application/json");
-                    return  dataToJson(e.getMessage());
+                    return  e.getMessage();
                 }
 
                 //update value
@@ -339,7 +337,7 @@ public class CarController extends UberAppUtil {
                 session.stop();
                 res.type("application/json");
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
         }
     };
@@ -367,7 +365,7 @@ public class CarController extends UberAppUtil {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             car.setId(UUID.randomUUID());
@@ -383,7 +381,7 @@ public class CarController extends UberAppUtil {
             session.stop();
             res.status(400);
             res.type("application/json");
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 

@@ -1,6 +1,7 @@
 package com.team4.uberapp.passenger;
 
 import com.team4.uberapp.domain.Validable;
+import com.team4.uberapp.util.ErrorReport;
 import lombok.Data;
 
 import java.util.UUID;
@@ -58,42 +59,42 @@ public class Passenger implements Validable, Cloneable {
     public boolean isValid() throws Exception{
         //valid firstName length
         if (this.firstName.isEmpty() || this.firstName.length() >50){
-            throw new Exception("The firstName length should not greater than 50 Characters");
+            throw new Exception(ErrorReport.toJson(3001, "The firstName length should not greater than 50 Characters"));
         }
         //valid lastName length
         if (this.lastName.isEmpty() || this.lastName.length() > 50) {
-            throw new Exception("The lastName length should not greater than 50 Characters");
+            throw new Exception(ErrorReport.toJson(3001, "The lastName length should not greater than 50 Characters"));
         }
         //valid addressLine1 length
         if (this.addressLine1.isEmpty() || this.addressLine1.length() >100){
-            throw new Exception("The firstName length should not greater than 50 Characters");
+            throw new Exception(ErrorReport.toJson(3001, "The firstName length should not greater than 50 Characters"));
         }
         //valid addressLine2 length, optional, could be empty
         if (this.addressLine2.length() > 100) {
-            throw new Exception("The lastName length should not greater than 50 Characters");
+            throw new Exception(ErrorReport.toJson(3001, "The lastName length should not greater than 50 Characters"));
         }
         //valid passowrd
         //if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
-        //    throw new Exception("The password length should >8 & <20");
+        //    throw new Exception(ErrorReport.toJson(3001, "The password length should >8 & <20"));
        // }
         //city
         if (this.city.isEmpty() || this.city.length() > 50) {
-            throw new Exception("The city length should not greater than 50 Characters");
+            throw new Exception(ErrorReport.toJson(3001, "The city length should not greater than 50 Characters"));
         }
         //state
         if (this.state.length() != 2) {
-            throw new Exception("The state length must be 2");
+            throw new Exception(ErrorReport.toJson(3001, "The state length must be 2"));
         }
         //zip
         if (this.zip.length()!=5) {
-            throw new Exception("The zip length must be 2");
+            throw new Exception(ErrorReport.toJson(3001, "The zip length must be 2"));
         }
         //emailAddress
 
         {
             Pattern pattern = Pattern.compile("^(.+)@(.+)$");
            if (pattern.matcher(this.emailAddress).matches() == false) {
-               throw new Exception("Invalid emailAddress");
+               throw new Exception(ErrorReport.toJson(3001, "Invalid emailAddress"));
             }
         }
 
@@ -101,7 +102,7 @@ public class Passenger implements Validable, Cloneable {
         {
             Pattern pattern = Pattern.compile("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}");
             if (pattern.matcher(this.phoneNumber).matches() == false) {
-                throw new Exception("Invalid phone #");
+                throw new Exception(ErrorReport.toJson(3001, "Invalid phone #"));
             }
         }
 

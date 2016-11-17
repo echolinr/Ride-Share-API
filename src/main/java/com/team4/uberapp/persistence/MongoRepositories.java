@@ -54,7 +54,11 @@ public class MongoRepositories extends Repositories {
     protected UserSessionRepository userSessionsRepository() {
         return new UserSessionMongoRepository(session);
     }
-
+//
+    @Override
+    protected RoutePointRepository routePointsRepository() {
+        return new RoutePointMongoRepository(session);
+    }
 
     private MongoSession session;
 
