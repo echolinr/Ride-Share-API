@@ -1,16 +1,13 @@
 package com.team4.uberapp.util;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jsonwebtoken.*;
 import org.mindrot.jbcrypt.BCrypt;
+import com.google.gson.*;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.security.Key;
 import java.util.Date;
 
@@ -20,17 +17,16 @@ import java.util.Date;
  */
 public class UberAppUtil {
     public static String dataToJson(Object data) {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            StringWriter sw = new StringWriter();
-            mapper.writeValue(sw, data);
-            return sw.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("IOEXception while mapping object to JSON");
-        }
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.toJson(data);
     }
 
+    public static JsonObject stringToJson(String data) {
+        JsonParser parser = new JsonParser();
+        JsonObject o = parser.parse(data).getAsJsonObject();
+        return o;
+    }
     // Define the BCrypt workload to use when generating password hashes. 10-31 is a valid value.
     private static int workload = 12;
 

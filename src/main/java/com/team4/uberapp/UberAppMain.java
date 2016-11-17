@@ -54,6 +54,12 @@ public class UberAppMain {
         delete(versionURI +"/rides/:id", RideController.delById);
         patch(versionURI +"/rides/:id", RideController.update);
 
+
+        // Rides' route points
+        get(versionURI + "/rides/:id/routePoints", RideController.getRoutePoints);
+        post(versionURI + "/rides/:id/routePoints", RideController.addRoutePoints);
+
+        // User session
         get(versionURI +"/sessions", UserSessionController.getAll);        // get all cars: v1/cars
         post(versionURI + "/sessions", UserSessionController.create);   // post  /cars
         //get(versionURI +"/sessions/:id", UserSessionController.getById); // get car by id : v1/cars/:id

@@ -6,6 +6,7 @@ import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.passenger.Passenger;
 import com.team4.uberapp.persistence.MongoRepositories;
+import com.team4.uberapp.util.ErrorReport;
 import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
@@ -109,7 +110,8 @@ public class DriverController extends UberAppUtil {
                 driver.isValid();
             } catch (Exception e){
                 res.status(400);
-                return dataToJson(e.getMessage());
+                res.type("application/json");
+                return e.getMessage();
             }
 
             Criteria criteria = session.createCriteria(Passenger.class); // create criteria object
@@ -125,23 +127,25 @@ public class DriverController extends UberAppUtil {
                     driver.setPassword(hashPassword(driver.getPassword()));
                     //session.clear();
                     Repositories.drivers().add(driver);
-
-                    session.stop();
-                    res.status(201);
-                    res.type("application/json");
-                    return dataToJson(driver);
                 }
+
+                session.stop();
+                res.status(201);
+                res.type("application/json");
+                return dataToJson(driver);
+
+            } else {
+                session.stop();
+                res.status(400);
+                res.type("application/json");
+                return ErrorReport.toJson(1001, "Driver has conflict email address： " + driver.getEmailAddress());
             }
-            // emailAddress is not unique for driver & passenger
-            session.stop();
-            res.status(400);
-            res.type("application/json");
-            return dataToJson("Driver/Passenger has conflict email address： " + driver.getEmailAddress());
+
         }catch (JsonParseException e){
             session.stop();
             res.status(400);
             res.type("application/json");
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 
@@ -239,7 +243,7 @@ public class DriverController extends UberAppUtil {
             }catch (Exception e){
                 session.stop();
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             //update value
@@ -262,7 +266,7 @@ public class DriverController extends UberAppUtil {
             session.stop();
             res.status(400);
             res.type("application/json");
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 

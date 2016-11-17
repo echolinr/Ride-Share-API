@@ -22,6 +22,7 @@
 package com.team4.uberapp.userSession;
 
 import com.team4.uberapp.domain.Validable;
+import com.team4.uberapp.util.ErrorReport;
 import lombok.Data;
 
 
@@ -49,10 +50,10 @@ public class UserSession implements Validable, Cloneable {
     public boolean isValid() throws Exception {
         //Could set up any additional validation rule
         if (this.email.isEmpty() || this.email.length() > 50) {
-            throw new Exception("email at most 50 Characters");
+            throw new Exception(ErrorReport.toJson(5001, "email at most 50 Characters"));
         }
         if (this.password.isEmpty() ) {
-            throw new Exception("Password is empty");
+            throw new Exception(ErrorReport.toJson(5001, "Password is empty"));
         }
         return true;
     }

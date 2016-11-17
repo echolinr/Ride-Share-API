@@ -5,6 +5,8 @@ package com.team4.uberapp.driver;
  */
 
 import com.team4.uberapp.domain.Validable;
+import com.team4.uberapp.util.ErrorReport;
+import com.team4.uberapp.util.UberAppUtil;
 import lombok.Data;
 
 import java.util.UUID;
@@ -53,36 +55,36 @@ public class Driver implements Validable {
 
     public boolean isValid() throws Exception{
         //valid firstName length
-        if (this.firstName.isEmpty() || this.firstName.length() >50){
-            throw new Exception("The firstName length should not greater than 50 Characters");
+        if (this.firstName == null || this.firstName.isEmpty() || this.firstName.length() >50){
+            throw new Exception(ErrorReport.toJson(1001, "The firstName length should not greater than 50 Characters"));
         }
         //valid lastName length
-        if (this.lastName.isEmpty() || this.lastName.length() > 50) {
-            throw new Exception("The lastName length should not greater than 50 Characters");
+        if (this.lastName == null || this.lastName.isEmpty() || this.lastName.length() > 50) {
+            throw new Exception(ErrorReport.toJson(1001, "The lastName length should not greater than 50 Characters"));
         }
         //valid addressLine1 length
-        if (this.addressLine1.isEmpty() || this.addressLine1.length() >100){
-            throw new Exception("The firstName length should not greater than 50 Characters");
+        if (this.addressLine1 == null || this.addressLine1.isEmpty() || this.addressLine1.length() >100){
+            throw new Exception(ErrorReport.toJson(1001, "The firstName length should not greater than 50 Characters"));
         }
         //valid addressLine2 length, addressLine2 is optional, could be empty
-        if (this.addressLine2.length() > 100) {
-            throw new Exception("The lastName length should not greater than 50 Characters");
+        if (this.addressLine2 == null || this.addressLine2.length() > 100) {
+            throw new Exception(ErrorReport.toJson(1001, "The lastName length should not greater than 50 Characters"));
         }
         //valid passowrd
-        //if (this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
-        //    throw new Exception("The password length should >8 & <20");
+        //if (this.password == null || this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
+        //    throw new Exception(ErrorReport.toJson1001, ("The password length should >8 & <20"));
         //}
         //city
-        if (this.city.isEmpty() ||  this.city.length() > 50) {
-            throw new Exception("The city length should not greater than 50 Characters");
+        if (this.city == null || this.city.isEmpty() ||  this.city.length() > 50) {
+            throw new Exception(ErrorReport.toJson(1001, "The city length should not greater than 50 Characters"));
         }
         //state
-        if (this.state.isEmpty() ||  this.state.length() != 2) {
-            throw new Exception("The state length must be 2");
+        if (this.state == null || this.state.isEmpty() ||  this.state.length() != 2) {
+            throw new Exception(ErrorReport.toJson(1001, "The state length must be 2"));
         }
         //zip
-        if (this.zip.isEmpty() || this.zip.length()!=5) {
-            throw new Exception("The zip length must be 2");
+        if (this.zip == null || this.zip.isEmpty() || this.zip.length()!=5) {
+            throw new Exception(ErrorReport.toJson(1001, "The zip length must be 2"));
         }
         //emailAddress
 
@@ -97,18 +99,18 @@ public class Driver implements Validable {
         {
             Pattern pattern = Pattern.compile("\\d{3}[-\\.\\s]\\d{3}[-\\.\\s]\\d{4}");
             if (pattern.matcher(this.phoneNumber).matches() == false) {
-                throw new Exception("Invalid phone #");
+                throw new Exception(ErrorReport.toJson(1001, "Invalid phone #"));
             }
         }
 
-        //zip
-        if (this.drivingLicense.isEmpty() || this.drivingLicense.length()> 16) {
-            throw new Exception("The drivingLicense length greater than 16");
+        //drivingLicense
+        if (this.drivingLicense == null || this.drivingLicense.isEmpty() || this.drivingLicense.length()> 16) {
+            throw new Exception(ErrorReport.toJson(1001, "The drivingLicense length greater than 16"));
         }
 
-        //zip
-        if (this.licensedState.isEmpty() || this.licensedState.length()!=2 ) {
-            throw new Exception("The zip length must be 2");
+        //licensedState
+        if (this.licensedState == null || this.licensedState.isEmpty() || this.licensedState.length()!=2 ) {
+            throw new Exception(ErrorReport.toJson(1001, "The zip length must be 2"));
         }
 
         return true;

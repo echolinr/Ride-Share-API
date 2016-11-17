@@ -30,6 +30,16 @@ public class RideMapping extends AggregateMap<Ride> {
     @Override
     public void map() {
         id().onProperty(element().getId()).natural();
-        property().onField("name");
+        property().onField("rideType");
+        property().onField("startPoint");
+        property().onField("endPoint");
+        property().onField("requestTime");
+        property().onField("pickupTime");
+        property().onField("dropOffTime");
+        property().onField("status");
+        property().onField("fare");
+        property().onField("driverId");
+        property().onField("carId");
+        property().onField("passengerId");
     }
 }
