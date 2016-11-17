@@ -71,7 +71,7 @@ public class UberAppMain {
                         halt(401, "User unathorized");
                     } else if (validTokenUser(token) == null) {
                         halt(401, "invalid token");
-                    
+                    }
                 }
             }
         });
