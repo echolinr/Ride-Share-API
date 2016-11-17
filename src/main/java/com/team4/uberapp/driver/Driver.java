@@ -4,7 +4,6 @@ package com.team4.uberapp.driver;
  * Created by HectorGuo on 11/8/16.
  */
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team4.uberapp.domain.Validable;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 @Data
-@JsonIgnoreProperties( { "password" })
+//@JsonIgnoreProperties( { "password" })
 public class Driver implements Validable {
     private UUID id;
     private String name;
