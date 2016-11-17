@@ -26,6 +26,7 @@ import lombok.Data;
 
 
 @Data
+//@JsonIgnoreProperties( { "password" })
 public class UserSession implements Validable, Cloneable {
     private Object id;
     //private DateTime creationDate = new DateTime();
@@ -38,10 +39,10 @@ public class UserSession implements Validable, Cloneable {
         // for mongolink
     }
 
-    public UserSession(String email, String passoword, String token) {
+    public UserSession(String email, String password) {
         //this.id = UUID.randomUUID();
         this.email   = email;
-        this.password  =  passoword;
+        this.password  =  password;
         //generate token
     }
 

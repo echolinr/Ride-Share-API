@@ -3,16 +3,18 @@ package com.team4.uberapp.userSession;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
+import com.team4.uberapp.driver.Driver;
+import com.team4.uberapp.passenger.Passenger;
 import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.UberAppUtil;
+import org.bson.types.ObjectId;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
 import org.mongolink.domain.criteria.Order;
+import org.mongolink.domain.criteria.Restrictions;
 import spark.Route;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class UserSessionController extends UberAppUtil {
     // GET /cars  Get all cars
@@ -80,7 +82,119 @@ public class UserSessionController extends UberAppUtil {
         }
 
     };
+    // POST /usersessions  Create usersessions
+    public static Route create = (req, res) -> {
+        Driver driver;
+        Passenger passenger;
+        String userId;
 
+        /* initialize db connection */
+        MongoSession session = MongoConfiguration.createSession();
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        try {
+            Map<String, String> token = new HashMap<String, String>();
+            ObjectMapper mapper = new ObjectMapper();
+            UserSession userSession = mapper.readValue(req.body(), UserSession.class);
+
+            try {
+                userSession.isValid();
+            } catch (Exception e){
+                res.status(400);
+                res.type("application/json");
+                return dataToJson(e.getMessage());
+            }
+
+            // find driver by email address
+            {
+                Criteria criteria = session.createCriteria(Driver.class); // create criteria object
+                criteria.add(Restrictions.equals("emailAddress", userSession.getEmail()));
+                // emailAddress for driver must be unique
+                if (criteria.list() != null && !criteria.list().isEmpty()) {
+                    driver = (Driver)(criteria.list().get(0));
+                    //check password
+                    if (checkPassword(userSession.getPassword(),driver.getPassword())) {
+                        // cleanup session
+                        session.clear();
+                        userSession.setId(new ObjectId());
+                        // hash password
+                        userSession.setPassword(hashPassword(userSession.getPassword()));
+                        // generate session token
+                        userSession.setToken(createToken(driver.getId().toString()));
+
+                        // store session， just for testing purpose, we don't need really put it into db
+                        // will remove this part later
+                        if(validTokenUser(userSession.getToken()) != null) {
+                            Repositories.userSessions().add(userSession);
+                        }
+
+                        // generate return
+                        session.stop();
+                        res.status(201);
+                        res.type("application/json");
+                        token.put("token",userSession.getToken());
+                        return dataToJson(token);
+                    } else {
+                        session.stop();
+                        res.status(401);
+                        res.type("application/json");
+                        return dataToJson("Log in failed. Password failed");
+                    }
+                }
+            }
+            // try passenger db
+            {
+                session.clear();
+                Criteria criteria = session.createCriteria(Passenger.class); // create criteria object
+                criteria.add(Restrictions.equals("emailAddress", userSession.getEmail()));
+                // emailAddress for driver must be unique
+                if (criteria.list() != null && !criteria.list().isEmpty()) {
+                    passenger = (Passenger)(criteria.list().get(0));
+                    //check password
+                    if (checkPassword(userSession.getPassword(),passenger.getPassword())) {
+                        // cleanup session
+                        session.clear();
+                        userSession.setId(new ObjectId());
+                        // hash password
+                        userSession.setPassword(hashPassword(userSession.getPassword()));
+                        // generate session token
+                        userSession.setToken(createToken(passenger.getId().toString()));
+
+                        // store session， just for testing purpose, we don't need really put it into db
+                        // will remove this part later
+                        if(validTokenUser(userSession.getToken()) != null) {
+                        // store session
+                             Repositories.userSessions().add(userSession);
+                        }
+
+                        // generate return
+                        session.stop();
+                        res.status(201);
+                        res.type("application/json");
+                        token.put("token",userSession.getToken());
+                        return dataToJson(token);
+                    } else {
+                        session.stop();
+                        res.status(401);
+                        res.type("application/json");
+                        return dataToJson("Log in failed. Password failed");
+                    }
+                }
+            }
+            session.stop();
+            res.status(401);
+            res.type("application/json");
+            return dataToJson("Log in failed. No user found");
+        }  catch (Exception e){
+            session.stop();
+            res.type("application/json");
+            res.status(400);
+            return dataToJson(e.getMessage());
+        }
+    };
+
+/*
     // GET /usersessions/:id  Get usersessions by id
     public static Route getById = (req, res) -> {
         //initialize db connection
@@ -104,43 +218,6 @@ public class UserSessionController extends UberAppUtil {
             return dataToJson(userSession);
         }
     };
-
-    // POST /usersessions  Create usersessions
-    public static Route create = (req, res) -> {
-        /* initialize db connection */
-        MongoSession session = MongoConfiguration.createSession();
-        session.start();
-        Repositories.initialise(new MongoRepositories(session));
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            UserSession userSession = mapper.readValue(req.body(), UserSession.class);
-            //userSession.setId(UUID.randomUUID());
-
-            try {
-                userSession.isValid();
-            } catch (Exception e){
-                res.status(400);
-                return dataToJson(e.getMessage());
-            }
-
-            Repositories.userSessions().add(userSession);
-
-            // close database connection
-            session.stop();
-
-            //prepare return result
-            res.type("application/json");
-            res.status(200);
-            return dataToJson(userSession);
-        }  catch (Exception e){
-            session.stop();
-            res.type("application/json");
-            res.status(400);
-            return dataToJson(e.getMessage());
-        }
-    };
-
 
     // DELETE /cars/:id  Delete car by id
     public static Route delById = (req, res) -> {
@@ -167,4 +244,29 @@ public class UserSessionController extends UberAppUtil {
             return dataToJson("UserSession: " + req.params(":id") +" deleted");
         }
     };
+/*
+    // GET /usersessions/:id  Get usersessions by id
+    public static Route getById = (req, res) -> {
+        //initialize db connection
+        MongoSession session = MongoConfiguration.createSession();
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        // get car by id, generate UUID from string id first
+        //UUID uid = UUID.fromString(req.params(":id"));
+        UserSession userSession = Repositories.userSessions().get(req.params(":id"));
+
+        // close database connection
+        session.stop();
+
+        res.type("application/json");
+        if (userSession == null) {
+            res.status(404); // 404 Not found
+            return dataToJson("UserSession: " + req.params(":id") +" not found");
+        } else {
+            res.status(200);
+            return dataToJson(userSession);
+        }
+    };
+*/
 }

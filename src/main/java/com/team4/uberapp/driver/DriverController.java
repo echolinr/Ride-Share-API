@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
+import com.team4.uberapp.passenger.Passenger;
 import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
@@ -111,25 +112,31 @@ public class DriverController extends UberAppUtil {
                 return dataToJson(e.getMessage());
             }
 
-            Criteria criteria = session.createCriteria(Driver.class); // create criteria object
+            Criteria criteria = session.createCriteria(Passenger.class); // create criteria object
             criteria.add(Restrictions.equals("emailAddress", driver.getEmailAddress()));
-            // emailAddress for driver must be unique
+            // emailAddress for driver must be unique in both driver & passenger
             if (criteria.list() == null || criteria.list().isEmpty()) {
-                driver.setId(UUID.randomUUID()); //generate UUID for driver
-                driver.setPassword(hashPassword(driver.getPassword()));
-                //session.clear();
-                Repositories.drivers().add(driver);
+                // no such emailAddrss in passenger, check driver now
+                session.clear();
+                criteria = session.createCriteria(Driver.class);
+                criteria.add(Restrictions.equals("emailAddress", driver.getEmailAddress()));
+                if (criteria.list() == null || criteria.list().isEmpty()) {
+                    driver.setId(UUID.randomUUID()); //generate UUID for driver
+                    driver.setPassword(hashPassword(driver.getPassword()));
+                    //session.clear();
+                    Repositories.drivers().add(driver);
 
-                session.stop();
-                res.status(201);
-                res.type("application/json");
-                return dataToJson(driver);
-            } else {
-                session.stop();
-                res.status(400);
-                res.type("application/json");
-                return dataToJson("Driver has conflict email address： " + driver.getEmailAddress());
+                    session.stop();
+                    res.status(201);
+                    res.type("application/json");
+                    return dataToJson(driver);
+                }
             }
+            // emailAddress is not unique for driver & passenger
+            session.stop();
+            res.status(400);
+            res.type("application/json");
+            return dataToJson("Driver/Passenger has conflict email address： " + driver.getEmailAddress());
         }catch (JsonParseException e){
             session.stop();
             res.status(400);
