@@ -74,6 +74,7 @@ public class PassengerController extends UberAppUtil {
         /* close database connection */
         session.stop();
         res.status(200);
+        res.type("application/json");
         return dataToJson(passengers);
 
     };

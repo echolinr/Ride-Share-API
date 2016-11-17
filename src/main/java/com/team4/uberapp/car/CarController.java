@@ -23,6 +23,15 @@ import java.util.stream.Collectors;
  */
 public class CarController extends UberAppUtil {
     // GET /cars  Get all cars
+    /**
+     * Implementation  for route:
+     *      //GET/cars  -- get all cars
+     *      //Get/cars for querying parameters count, offsetId, sort & sortOrder
+     *      Used in combination with sort, it specifies the order in which to return the elements. asc is for asending
+     *      or desc for descending. Default value is asc except for a time-based sort field in which case the default values is desc
+     *
+     * @return AppUser - userID in token if not expired or null
+     */
     public static Route getAll = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
