@@ -16,6 +16,7 @@ public class Passenger implements Validable, Cloneable {
     private String firstName; // maximum 50 characters
     private String lastName; // maximum 50 characters
     private String emailAddress; // will add valid format later
+ //   @JsonIgnore
     private String password; // min 8, max 20 //
     private String addressLine1; // max 100
     private String addressLine2; // max 100
@@ -28,8 +29,17 @@ public class Passenger implements Validable, Cloneable {
     protected Passenger() {
         // for mongolink
     }
+/*
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
 
-
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
+*/
     public Passenger(String firstName, String lastName, String emailAddress, String password, String addressLine1, String addressLine2, String city, String state, String zip, String phoneNumber) {
         this.id = UUID.randomUUID();
         this.firstName = firstName;

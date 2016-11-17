@@ -29,7 +29,7 @@ public class UserSessionMapping extends AggregateMap<UserSession> {
 
     @Override
     public void map() {
-        //id().onProperty(element().getId()).natural();
+        id().onProperty(element().getId()).natural();
         //property().onField("id");
         property().onField("email");
         property().onField("password");

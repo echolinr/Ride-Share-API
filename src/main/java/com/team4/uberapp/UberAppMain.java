@@ -54,9 +54,9 @@ public class UberAppMain {
         patch(versionURI +"/rides/:id", RideController.update);
 
         get(versionURI +"/sessions", UserSessionController.getAll);        // get all cars: v1/cars
-        get(versionURI +"/sessions/:id", UserSessionController.getById); // get car by id : v1/cars/:id
         post(versionURI + "/sessions", UserSessionController.create);   // post  /cars
-        delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
+        //get(versionURI +"/sessions/:id", UserSessionController.getById); // get car by id : v1/cars/:id
+        //delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
 
         //add access control for later
         /*
