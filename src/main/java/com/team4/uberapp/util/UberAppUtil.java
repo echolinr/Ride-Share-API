@@ -2,6 +2,7 @@ package com.team4.uberapp.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jsonwebtoken.*;
@@ -25,13 +26,9 @@ public class UberAppUtil {
      */
     public static String dataToJson(Object data) {
         ObjectMapper mapper = new ObjectMapper();
-        String jsonIntoString;
-        //GsonBuilder builder = new GsonBuilder();
-        //Gson gson = builder.create();
-        //return gson.toJson(data);
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
-            jsonIntoString = mapper.writeValueAsString(data);
-            return jsonIntoString;
+            return mapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {
             return e.getMessage();
         }
