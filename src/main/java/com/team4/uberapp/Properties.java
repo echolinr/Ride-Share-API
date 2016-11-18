@@ -1,3 +1,9 @@
+/**
+ * Get system configuration for db name & etc
+ *
+ * @author  Lin Zhai
+ * @version 0.1
+ */
 package com.team4.uberapp;
 
 import com.mongodb.MongoClient;

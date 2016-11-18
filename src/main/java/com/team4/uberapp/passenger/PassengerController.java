@@ -19,7 +19,10 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by lzhai on 2016/11/10.
+ * PassengerController: car routes for get/post/...
+ *
+ * @author  Lin Zhai & Hector Guo
+ * @version 0.2
  */
 public class PassengerController extends UberAppUtil {
     // GET /passengers  Get all passengers

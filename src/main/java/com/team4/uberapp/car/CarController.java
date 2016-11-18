@@ -19,7 +19,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Created by HectorGuo on 11/8/16.
+ * CarController: car routes for get/post/...
+ *
+ * @author  Lin Zhai & Hector Guo
+ * @version 0.2
  */
 public class CarController extends UberAppUtil {
     // GET /cars  Get all cars

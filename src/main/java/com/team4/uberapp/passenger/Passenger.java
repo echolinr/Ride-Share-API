@@ -9,8 +9,13 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 /**
- * Created by lzhai on 2016/11/10.
+ * Passenger Class defines the object format for passenger in MongoDB
+ *
+ * @author  Lin Zhai
+ * @version 0.2
  */
+
+
 //@Data
 //@JsonIgnoreProperties({ "password" })
 public class Passenger implements Validable, Cloneable {

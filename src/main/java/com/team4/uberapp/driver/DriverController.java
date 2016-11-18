@@ -20,7 +20,10 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by HectorGuo on 11/8/16.
+ * DriverController: car routes for get/post/...
+ *
+ * @author  Lin Zhai & Hector Guo
+ * @version 0.2
  */
 public class DriverController extends UberAppUtil {
     public static Route getAll = (req, res) -> {

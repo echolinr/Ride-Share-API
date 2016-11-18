@@ -1,3 +1,9 @@
+/**
+ * UberAppMain: main entry point for application
+ *
+ * @author  Lin Zhai
+ * @version 0.1
+ */
 package com.team4.uberapp;
 
 import com.team4.uberapp.car.CarController;

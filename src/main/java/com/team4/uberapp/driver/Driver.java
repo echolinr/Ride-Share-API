@@ -1,7 +1,10 @@
 package com.team4.uberapp.driver;
 
 /**
- * Created by HectorGuo on 11/8/16.
+ * Driver Class defines the object format for car in MongoDB
+ *
+ * @author  Lin Zhai  & Hector Guo
+ * @version 0.2
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

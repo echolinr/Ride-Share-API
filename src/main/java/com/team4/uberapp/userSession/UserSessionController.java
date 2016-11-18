@@ -1,3 +1,12 @@
+/**
+ * UserSession route for user authentication
+ * POST /sessions?emaail, passord for real authentication
+ * GET /sessions for debug purpose
+ *
+ * @author  Lin Zhai
+ * @version 0.1
+ */
+
 package com.team4.uberapp.userSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
