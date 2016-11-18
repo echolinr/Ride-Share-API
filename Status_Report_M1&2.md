@@ -1,4 +1,4 @@
-# Status Report by Hector&Lin
+# Status Report Milestone 1 and 2
 ## Naming Conventions
 All our coding fowllows Oracle Java Naming Conventions, please refer to http://www.oracle.com/technetwork/java/codeconventions-135099.html
 
