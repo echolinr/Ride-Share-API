@@ -21,13 +21,14 @@
 
 package com.team4.uberapp.userSession;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.util.ErrorReport;
-import lombok.Data;
 
 
-@Data
-//@JsonIgnoreProperties( { "password" })
+//@Data
+//@JsonIgnoreProperties( { "password","email" })
 public class UserSession implements Validable, Cloneable {
     private Object id;
     //private DateTime creationDate = new DateTime();
@@ -45,6 +46,38 @@ public class UserSession implements Validable, Cloneable {
         this.email   = email;
         this.password  =  password;
         //generate token
+    }
+
+    public Object getId() {
+        return id;
+    }
+
+    public void setId(Object id) {
+        this.id = id;
+    }
+    @JsonIgnore
+    public String getEmail() {
+        return email;
+    }
+    @JsonProperty
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+    @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public boolean isValid() throws Exception {

@@ -1,8 +1,9 @@
 package com.team4.uberapp.passenger;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.util.ErrorReport;
-import lombok.Data;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
@@ -10,14 +11,14 @@ import java.util.regex.Pattern;
 /**
  * Created by lzhai on 2016/11/10.
  */
-@Data
-//@JsonIgnoreProperties( { "password" })
+//@Data
+//@JsonIgnoreProperties({ "password" })
 public class Passenger implements Validable, Cloneable {
     private UUID id;
     private String firstName; // maximum 50 characters
     private String lastName; // maximum 50 characters
     private String emailAddress; // will add valid format later
- //   @JsonIgnore
+   // @JsonIgnore
     private String password; // min 8, max 20 //
     private String addressLine1; // max 100
     private String addressLine2; // max 100
@@ -30,7 +31,39 @@ public class Passenger implements Validable, Cloneable {
     protected Passenger() {
         // for mongolink
     }
-/*
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
+
     @JsonIgnore
     public String getPassword() {
         return password;
@@ -40,7 +73,55 @@ public class Passenger implements Validable, Cloneable {
     public void setPassword(String password) {
         this.password = password;
     }
-*/
+
+    public String getAddressLine1() {
+        return addressLine1;
+    }
+
+    public void setAddressLine1(String addressLine1) {
+        this.addressLine1 = addressLine1;
+    }
+
+    public String getAddressLine2() {
+        return addressLine2;
+    }
+
+    public void setAddressLine2(String addressLine2) {
+        this.addressLine2 = addressLine2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     public Passenger(String firstName, String lastName, String emailAddress, String password, String addressLine1, String addressLine2, String city, String state, String zip, String phoneNumber) {
         this.id = UUID.randomUUID();
         this.firstName = firstName;

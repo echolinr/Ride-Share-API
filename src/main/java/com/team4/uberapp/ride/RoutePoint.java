@@ -6,12 +6,11 @@ package com.team4.uberapp.ride;
 
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.location.Coordinate;
-import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
-@Data
+//@Data
 public class RoutePoint implements Validable {
     private UUID id;
     private Coordinate point;
@@ -29,6 +28,38 @@ public class RoutePoint implements Validable {
         this.id = UUID.randomUUID();
         this.point = new Coordinate(lat, lng);
         this.timestamp = timestamp;
+        this.rideId = rideId;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Coordinate getPoint() {
+        return point;
+    }
+
+    public void setPoint(Coordinate point) {
+        this.point = point;
+    }
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public UUID getRideId() {
+        return rideId;
+    }
+
+    public void setRideId(UUID rideId) {
         this.rideId = rideId;
     }
 

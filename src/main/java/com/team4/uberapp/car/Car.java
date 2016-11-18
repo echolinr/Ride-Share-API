@@ -1,36 +1,20 @@
-/*
- * MongoLink, Object Document Mapper for Java and MongoDB
+/**
+ * Car Class defines the object format for car in MongoDB
  *
- * Copyright (c) 2012, Arpinum or third-party contributors as
- * indicated by the @author tags
- *
- * MongoLink is free software: you can redistribute it and/or modify
- * it under the terms of the Lesser GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MongoLink is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * Lesser GNU General Public License for more details.
- *
- * You should have received a copy of the Lesser GNU General Public License
- * along with MongoLink.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * @author  Lin Zhai  & Hector Guo
+ * @version 0.2
  */
-
 package com.team4.uberapp.car;
 
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.util.ErrorReport;
-import lombok.Data;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 
-@Data
+//@Data
 public class Car implements Validable, Cloneable {
     private UUID id;
     //private DateTime creationDate = new DateTime();
@@ -58,6 +42,78 @@ public class Car implements Validable, Cloneable {
         this.color = color;
         this.validRideTypes = validRideTypes;
         System.out.println( make+ model + license+ carType+ maxPassengers+validRideTypes);
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getMake() {
+        return make;
+    }
+
+    public void setMake(String make) {
+        this.make = make;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public String getCarType() {
+        return carType;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
+    }
+
+    public int getMaxPassengers() {
+        return maxPassengers;
+    }
+
+    public void setMaxPassengers(int maxPassengers) {
+        this.maxPassengers = maxPassengers;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getValidRideTypes() {
+        return validRideTypes;
+    }
+
+    public void setValidRideTypes(String validRideTypes) {
+        this.validRideTypes = validRideTypes;
+    }
+
+    public UUID getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(UUID driverId) {
+        this.driverId = driverId;
     }
 
     public boolean isValid() throws Exception {

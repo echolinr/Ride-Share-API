@@ -5,14 +5,13 @@ package com.team4.uberapp.ride;
  */
 
 import com.team4.uberapp.domain.Validable;
-import com.team4.uberapp.util.ErrorReport;
-import lombok.Data;
 import com.team4.uberapp.location.Coordinate;
+import com.team4.uberapp.util.ErrorReport;
 
-import java.util.UUID;
 import java.sql.Timestamp;
+import java.util.UUID;
 
-@Data
+//@Data
 public class Ride implements Validable {
     private UUID id;
     private String rideType;
@@ -31,6 +30,102 @@ public class Ride implements Validable {
     @SuppressWarnings("UnusedDeclaration")
     protected Ride() {
         // for mongolink
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getRideType() {
+        return rideType;
+    }
+
+    public void setRideType(String rideType) {
+        this.rideType = rideType;
+    }
+
+    public Coordinate getStartPoint() {
+        return startPoint;
+    }
+
+    public void setStartPoint(Coordinate startPoint) {
+        this.startPoint = startPoint;
+    }
+
+    public Coordinate getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(Coordinate endPoint) {
+        this.endPoint = endPoint;
+    }
+
+    public Timestamp getRequestTime() {
+        return requestTime;
+    }
+
+    public void setRequestTime(Timestamp requestTime) {
+        this.requestTime = requestTime;
+    }
+
+    public Timestamp getPickupTime() {
+        return pickupTime;
+    }
+
+    public void setPickupTime(Timestamp pickupTime) {
+        this.pickupTime = pickupTime;
+    }
+
+    public Timestamp getDropOffTime() {
+        return dropOffTime;
+    }
+
+    public void setDropOffTime(Timestamp dropOffTime) {
+        this.dropOffTime = dropOffTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getFare() {
+        return fare;
+    }
+
+    public void setFare(int fare) {
+        this.fare = fare;
+    }
+
+    public UUID getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(UUID driverId) {
+        this.driverId = driverId;
+    }
+
+    public UUID getCarId() {
+        return carId;
+    }
+
+    public void setCarId(UUID carId) {
+        this.carId = carId;
+    }
+
+    public UUID getPassengerId() {
+        return passengerId;
+    }
+
+    public void setPassengerId(UUID passengerId) {
+        this.passengerId = passengerId;
     }
 
     public Ride(String rideType, Coordinate startPoint, Coordinate endPoint, Timestamp requestTime, Timestamp pickupTime, Timestamp dropOffTime, String status, int fare, UUID driverId, UUID carId, UUID passengerId) {

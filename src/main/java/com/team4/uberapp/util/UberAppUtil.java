@@ -1,10 +1,11 @@
 package com.team4.uberapp.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import io.jsonwebtoken.*;
 import org.mindrot.jbcrypt.BCrypt;
-import com.google.gson.*;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -16,17 +17,36 @@ import java.util.Date;
  * Modified by Lin Zhai on 11/17, add hash and token function.
  */
 public class UberAppUtil {
+    /**
+     * This method can be used to convert a java object to json string
+     * Using ObjectMapper, This will work with jackson annotation
+     * @param data Java Object need to convert
+     * @return String - serialized object string
+     */
     public static String dataToJson(Object data) {
-        GsonBuilder builder = new GsonBuilder();
-        Gson gson = builder.create();
-        return gson.toJson(data);
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonIntoString;
+        //GsonBuilder builder = new GsonBuilder();
+        //Gson gson = builder.create();
+        //return gson.toJson(data);
+        try {
+            jsonIntoString = mapper.writeValueAsString(data);
+            return jsonIntoString;
+        } catch (JsonProcessingException e) {
+            return e.getMessage();
+        }
     }
-
+    /**
+     * This method can be used to convert a string to json object
+     * @param data json format string
+     * @return String - deserialize into json object
+     */
     public static JsonObject stringToJson(String data) {
         JsonParser parser = new JsonParser();
         JsonObject o = parser.parse(data).getAsJsonObject();
         return o;
     }
+
     // Define the BCrypt workload to use when generating password hashes. 10-31 is a valid value.
     private static int workload = 12;
 

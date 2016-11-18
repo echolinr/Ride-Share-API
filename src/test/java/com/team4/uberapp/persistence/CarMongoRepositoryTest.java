@@ -22,14 +22,15 @@
 package com.team4.uberapp.persistence;
 
 import com.team4.uberapp.car.Car;
+import com.team4.uberapp.domain.Repositories;
+import com.team4.uberapp.test.WithRepository;
 import org.junit.Rule;
 import org.junit.Test;
-import com.team4.uberapp.domain.*;
-import com.team4.uberapp.test.WithRepository;
 
 import java.util.List;
+import java.util.UUID;
 
-import static org.fest.assertions.Assertions.*;
+import static org.fest.assertions.Assertions.assertThat;
 
 public class CarMongoRepositoryTest {
 
@@ -39,6 +40,7 @@ public class CarMongoRepositoryTest {
     @Test
     public void canAdd() {
         Car car = new Car("vw", "beetle", "5PVXXX", "Sedan", 4,"white", "ECONOMY");
+        car.setId(UUID.randomUUID());
         Repositories.cars().add(car);
         withRepository.cleanSession();
 
@@ -57,6 +59,7 @@ public class CarMongoRepositoryTest {
     @Test
     public void canDelete() {
         Car car = new Car("toyota", "camery", "7WZXXX", "Sedan", 4, "white", "PREMIUM" );
+        car.setId(UUID.randomUUID());
         Repositories.cars().add(car);
 
         Repositories.cars().delete(car);
@@ -67,13 +70,20 @@ public class CarMongoRepositoryTest {
 
     @Test
     public void canGetAll() {
-        Repositories.cars().add( new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "white", "ECONOMY"));
-        Repositories.cars().add(new Car("toyota", "camery", "7WZXXX", "Sedan", 4,"white",  "PREMIUM"));
+        Car car1 = new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "white", "ECONOMY");
+        car1.setId(UUID.randomUUID());
+        Car car2 = new Car("toyota", "camery", "7WZXXX", "Sedan", 4,"white",  "PREMIUM");
+        car2.setId(UUID.randomUUID());
+        int carSize;
+        Repositories.cars().add(car1);
+        Repositories.cars().add(car2);
         withRepository.cleanSession();
 
         List<Car> cars = Repositories.cars().all();
-
-        assertThat(cars).hasSize(2);
+        carSize = cars.size();
+        Repositories.cars().delete(car1);
+        Repositories.cars().delete(car2);
+        assertThat(carSize==2);
     }
 
 }
