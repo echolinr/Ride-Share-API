@@ -128,6 +128,21 @@ public class Ride implements Validable {
         this.passengerId = passengerId;
     }
 
+    /**
+     * Instantiates a new Ride.
+     *
+     * @param rideType    the ride type
+     * @param startPoint  the start point
+     * @param endPoint    the end point
+     * @param requestTime the request time
+     * @param pickupTime  the pickup time
+     * @param dropOffTime the drop off time
+     * @param status      the status
+     * @param fare        the fare
+     * @param driverId    the driver id
+     * @param carId       the car id
+     * @param passengerId the passenger id
+     */
     public Ride(String rideType, Coordinate startPoint, Coordinate endPoint, Timestamp requestTime, Timestamp pickupTime, Timestamp dropOffTime, String status, int fare, UUID driverId, UUID carId, UUID passengerId) {
         this.id = UUID.randomUUID();
         this.rideType = rideType;

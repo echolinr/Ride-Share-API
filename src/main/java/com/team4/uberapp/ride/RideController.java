@@ -1,3 +1,10 @@
+/**
+ * Ride Controller, used for abstracting CRUD methods of rides
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.ride;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -17,6 +24,10 @@ import java.util.UUID;
  * Created by HectorGuo on 11/8/16.
  */
 public class RideController extends UberAppUtil {
+
+    /**
+     * The Spark Route getAll.
+     */
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -31,6 +42,9 @@ public class RideController extends UberAppUtil {
         return dataToJson(rides);
     };
 
+    /**
+     * The Spark Route getById.
+     */
     public static Route getById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -46,6 +60,9 @@ public class RideController extends UberAppUtil {
         return dataToJson(ride);
     };
 
+    /**
+     * The Spark Route create.
+     */
     public static Route create = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -79,6 +96,9 @@ public class RideController extends UberAppUtil {
         }
     };
 
+    /**
+     * The Spark Route update.
+     */
     public static Route update = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -115,6 +135,9 @@ public class RideController extends UberAppUtil {
         }
     };
 
+    /**
+     * The Spark Route delById.
+     */
     public static Route delById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -131,6 +154,9 @@ public class RideController extends UberAppUtil {
         return dataToJson("Ride Deleted");
     };
 
+    /**
+     * The Spark Route addRoutePoints.
+     */
     public static Route addRoutePoints = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -168,6 +194,9 @@ public class RideController extends UberAppUtil {
         }
     };
 
+    /**
+     * The Spark Route getRoutePoints.
+     */
     public static Route getRoutePoints = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
