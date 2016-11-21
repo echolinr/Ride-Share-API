@@ -30,7 +30,9 @@ import org.junit.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static org.fest.assertions.Assertions.assertThat;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class CarMongoRepositoryTest {
 
@@ -46,14 +48,14 @@ public class CarMongoRepositoryTest {
 
         Car carFound = Repositories.cars().get(car.getId());
 
-        assertThat(carFound).isNotNull();
-        assertThat(carFound.getMake()).isEqualTo("vw");
-        assertThat(carFound.getId()).isNotNull();
-        assertThat(carFound.getModel()).isEqualTo("beetle");
-        assertThat(carFound.getLicense()).isEqualTo("5PVXXX");
-        assertThat(carFound.getMaxPassengers() == 4);
-        assertThat(carFound.getColor()).isEqualTo("white");
-        assertThat(carFound.getValidRideTypes()).isEqualTo("ECONOMY");
+        assertNotNull(carFound);
+        assertEquals(carFound.getMake(),car.getMake());
+        assertNotNull(carFound.getId());
+        assertEquals(carFound.getModel(),car.getModel());
+        assertEquals(carFound.getLicense(),car.getLicense());
+        assertEquals(carFound.getMaxPassengers(),car.getMaxPassengers());
+        assertEquals(carFound.getColor(),car.getColor());
+        assertEquals(carFound.getValidRideTypes(),car.getValidRideTypes());
     }
 
     @Test
@@ -65,7 +67,7 @@ public class CarMongoRepositoryTest {
         Repositories.cars().delete(car);
         withRepository.cleanSession();
 
-        assertThat(Repositories.cars().get(car.getId())).isNull();
+        assertNull(Repositories.cars().get(car.getId()));
     }
 
     @Test
@@ -83,7 +85,7 @@ public class CarMongoRepositoryTest {
         carSize = cars.size();
         Repositories.cars().delete(car1);
         Repositories.cars().delete(car2);
-        assertThat(carSize==2);
+        assertEquals(carSize,2);
     }
 
 }
