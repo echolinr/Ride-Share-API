@@ -1,3 +1,10 @@
+/**
+ * Car Controller, used for abstracting CRUD methods of cars
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.car;
 
 import com.fasterxml.jackson.core.JsonParseException;

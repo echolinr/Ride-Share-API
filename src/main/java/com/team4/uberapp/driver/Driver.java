@@ -151,6 +151,22 @@ public class Driver implements Validable {
         this.licensedState = licensedState;
     }
 
+    /**
+     * Instantiates a new Driver.
+     *
+     * @param firstName      the first name
+     * @param lastName       the last name
+     * @param emailAddress   the email address
+     * @param password       the password
+     * @param addressLine1   the address line 1
+     * @param addressLine2   the address line 2
+     * @param city           the city
+     * @param state          the state
+     * @param zip            the zip
+     * @param phoneNumber    the phone number
+     * @param drivingLicense the driving license
+     * @param licensedState  the licensed state
+     */
     public Driver(String firstName, String lastName, String emailAddress, String password, String addressLine1, String addressLine2, String city, String state,
                   String zip, String phoneNumber, String drivingLicense, String licensedState) {
         this.id = UUID.randomUUID();

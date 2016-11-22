@@ -1,3 +1,10 @@
+/**
+ * Passenger Controller, used for abstracting CRUD methods of passengers
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.passenger;
 
 import com.fasterxml.jackson.core.JsonParseException;

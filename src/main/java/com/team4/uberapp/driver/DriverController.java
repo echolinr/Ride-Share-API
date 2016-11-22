@@ -1,3 +1,10 @@
+/**
+ * Driver Controller, used for abstracting CRUD methods of drivers
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.driver;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -26,6 +33,7 @@ import java.util.UUID;
  * @version 0.2
  */
 public class DriverController extends UberAppUtil {
+
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
         session.start();

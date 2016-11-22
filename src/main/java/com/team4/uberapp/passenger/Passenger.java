@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * Passenger Class defines the object format for passenger in MongoDB
  *
- * @author  Lin Zhai
+ * @author Lin Zhai
  * @version 0.2
  */
 
@@ -127,6 +127,20 @@ public class Passenger implements Validable, Cloneable {
         this.phoneNumber = phoneNumber;
     }
 
+    /**
+     * Instantiates a new Passenger.
+     *
+     * @param firstName    the first name
+     * @param lastName     the last name
+     * @param emailAddress the email address
+     * @param password     the password
+     * @param addressLine1 the address line 1
+     * @param addressLine2 the address line 2
+     * @param city         the city
+     * @param state        the state
+     * @param zip          the zip
+     * @param phoneNumber  the phone number
+     */
     public Passenger(String firstName, String lastName, String emailAddress, String password, String addressLine1, String addressLine2, String city, String state, String zip, String phoneNumber) {
         this.id = UUID.randomUUID();
         this.firstName = firstName;
