@@ -1,5 +1,6 @@
 package com.team4.uberapp.car;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.UberAppMain;
@@ -11,8 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mongolink.MongoSession;
 
+import java.util.List;
 import java.util.UUID;
 
+import static com.team4.uberapp.util.UberAppUtil.dataToJson;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -62,7 +65,8 @@ public class CarControllerTest {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
         Repositories.cars().add(car);
-        session.flush();
+        session.stop();
+
 
         // using GET/v1/car/:id
         String path = "/v1/cars/" + car.getId().toString();
@@ -71,11 +75,18 @@ public class CarControllerTest {
             ObjectMapper mapper = new ObjectMapper();
             Car testCar = mapper.readValue(response.body, Car.class);
 
-            //remove testing car from db
-            //Repositories.cars().delete(car);
+            // remove testing car from db
+            session = MongoConfiguration.createSession();
+            session.start();
+            Repositories.initialise(new MongoRepositories(session));
+            // need load car in before delete
+            Repositories.cars().get(testCar.getId());
+            Repositories.cars().delete(car);
             session.stop();
+
             //test
             assertNotNull(testCar);
+            assertEquals(200,response.status);
             assertEquals(car.getMake(), testCar.getMake());
             assertEquals(car.getModel(), testCar.getModel());
             assertEquals(car.getLicense(),testCar.getLicense());
@@ -83,9 +94,8 @@ public class CarControllerTest {
             assertEquals(car.getMaxPassengers(), testCar.getMaxPassengers());
             assertEquals(car.getColor(), testCar.getColor());
             assertEquals(car.getValidRideTypes(),testCar.getValidRideTypes());
-
         } catch (Exception e) {
-            session.stop();
+            System.out.println(e.getMessage());
             assertEquals(1,2);
         }
     }
@@ -196,13 +206,13 @@ public class CarControllerTest {
     @Test
     public void canNotPostCarWhenMissingProperty() {
         String reqestJson = "{" +
-                "\"make\" : \"isuzuafdafadfadshfaldjfaldkfhaldskhfaldshfaldskjfadlksfjadlfhadf\","+
+                "\"make\" : \"isuzuafdafadfadshfa\","+
                 "\"model\" : \"sx4\"," +
                 "\"license\" : \"88PX123\"," +
                 "\"carType\" : \"sedan\"," +
                 //"\"color\": \"blue\"," +
                 "\"maxPassengers\" : 5,"+
-                "\"validRideTypes\" : \"ABC\"}";
+                "\"validRideTypes\" : \"ECONOMY\"}";
 
         try {
             SparkTestUtil.UrlResponse response = http.doMethod("POST", "/v1/cars",reqestJson, "application/json");
@@ -211,4 +221,95 @@ public class CarControllerTest {
             assertEquals(1,2);
         }
     }
+    @Test
+    public void canPatchCar() {
+        // add a car in to db
+        Car car = new Car("vw", "audi", "5PVXXX", "Sedan", 4, "white", "ECONOMY");
+        car.setId(UUID.randomUUID());
+        MongoSession session = MongoConfiguration.createSession();
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+        Repositories.cars().add(car);
+        session.stop();
+
+        // using PATCH/v1/car/:id
+        String path = "/v1/cars/" + car.getId().toString();
+        String reqestJson = "{" +
+                "\"make\" : \"toyota\","+
+                "\"validRideTypes\" : \"PREMIUM\"}";
+        try {
+            SparkTestUtil.UrlResponse response = http.doMethod("PATCH", path, reqestJson, "application/json");
+            session = MongoConfiguration.createSession();
+            session.start();
+            Repositories.initialise(new MongoRepositories(session));
+            Car testCar = Repositories.cars().get(car.getId());
+            Repositories.cars().delete(testCar);
+            session.stop();
+            assertNotNull(testCar);
+            assertEquals(200, response.status);
+            assertEquals("toyota", testCar.getMake());
+            assertEquals("PREMIUM",testCar.getValidRideTypes());
+        } catch (Exception e) {
+            assertEquals(1,2);
+        }
+    }
+    @Test
+    public void testQueryCount() {
+        // using get/v1/car?count=xx
+        int count = 1;
+        String path = "/v1/cars?count=" + count;
+        try {
+            SparkTestUtil.UrlResponse response = http.doMethod("GET", path, null, "application/json");
+            // convert json to list of cars
+            ObjectMapper objectMapper = new ObjectMapper();
+            TypeReference<List<Car>> mapType = new TypeReference<List<Car>>() {};
+            List<Car> jsonToCarList =  objectMapper.readValue(response.body, mapType);
+
+            assertEquals(200,response.status);
+            assertEquals(count,jsonToCarList.size());
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            assertEquals(1,2);
+        }
+    }
+    @Test
+    public void testQueryOffsetIdAndCount() {
+        // using get/v1/car?count=xx
+        int count = 1;
+        int offsetId=0;
+        int total = offsetId + count;
+        String path = "/v1/cars?count=" + total;
+        List<Car> totalCars;
+        List<Car> indexCars;
+        try {
+            // get total cars first
+            SparkTestUtil.UrlResponse response = http.doMethod("GET", path, null, "application/json");
+            // convert json to list of cars
+            ObjectMapper objectMapper = new ObjectMapper();
+            TypeReference<List<Car>> mapType = new TypeReference<List<Car>>() {};
+            totalCars =  objectMapper.readValue(response.body, mapType);
+            System.out.println("######################");
+            System.out.println(dataToJson(totalCars.get(0)));
+
+            // get index cars
+            path = "/v1/cars?offsetId=" + offsetId + "&count=" + count;
+            response = http.doMethod("GET", path, null, "application/json");
+            // convert json to list of cars
+            indexCars =  objectMapper.readValue(response.body, mapType);
+            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+            System.out.println(dataToJson(indexCars.get(0)));
+
+            assertEquals(200,response.status);
+            assertEquals(count,indexCars.size());
+            for (int idx = 0; idx<count; idx++) {
+                Car expectCar = totalCars.get(idx+offsetId);
+                Car acturalCar = indexCars.get(idx);
+                assertEquals(expectCar.getId(),acturalCar.getId());
+            }
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            assertEquals(1,2);
+        }
+    }
+
 }
