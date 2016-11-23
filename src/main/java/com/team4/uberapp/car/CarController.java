@@ -183,11 +183,13 @@ public class CarController extends UberAppUtil {
                 i = 1;
             }
 */
+            res.type("application/json");
+
             try {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return e.getMessage();
+                return dataToJson(e.getMessage());
             }
 
             Repositories.cars().add(car);
@@ -196,14 +198,12 @@ public class CarController extends UberAppUtil {
             session.stop();
 
             //prepare return result
-            res.type("application/json");
             res.status(200);
             return dataToJson(car);
         }  catch (Exception e){
             session.stop();
-            res.type("application/json");
             res.status(400);
-            return e.getMessage();
+            return dataToJson(e.getMessage());
         }
     };
 
