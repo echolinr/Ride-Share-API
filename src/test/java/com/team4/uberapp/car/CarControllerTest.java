@@ -15,10 +15,10 @@ import org.mongolink.MongoSession;
 import java.util.List;
 import java.util.UUID;
 
-import static com.team4.uberapp.util.UberAppUtil.dataToJson;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static spark.Spark.awaitInitialization;
 import static spark.Spark.stop;
 
@@ -288,16 +288,12 @@ public class CarControllerTest {
             ObjectMapper objectMapper = new ObjectMapper();
             TypeReference<List<Car>> mapType = new TypeReference<List<Car>>() {};
             totalCars =  objectMapper.readValue(response.body, mapType);
-            System.out.println("######################");
-            System.out.println(dataToJson(totalCars.get(0)));
 
             // get index cars
             path = "/v1/cars?offsetId=" + offsetId + "&count=" + count;
             response = http.doMethod("GET", path, null, "application/json");
             // convert json to list of cars
             indexCars =  objectMapper.readValue(response.body, mapType);
-            System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-            System.out.println(dataToJson(indexCars.get(0)));
 
             assertEquals(200,response.status);
             assertEquals(count,indexCars.size());
@@ -310,6 +306,36 @@ public class CarControllerTest {
             System.out.print(e.getMessage());
             assertEquals(1,2);
         }
+    }
+    @Test
+    public void testQuerySortAndSortorder() {
+        // using get/v1/car?count=xx
+        //String path = "/v1/cars?offsetId=0&count=2&sort=maxPassengers&sortOrder=desc";
+        String path = "/v1/cars?sort=maxPassengers&sortOrder=desc";
+        try {
+            // get total cars first
+            SparkTestUtil.UrlResponse response = http.doMethod("GET", path, null, "application/json");
+            // convert json to list of cars
+            ObjectMapper objectMapper = new ObjectMapper();
+            TypeReference<List<Car>> mapType = new TypeReference<List<Car>>() {};
+            List<Car> cars =  objectMapper.readValue(response.body, mapType);
+            Car car0, car1;
+
+            assertEquals(200,response.status);
+            assertTrue(cars.size()>=2);
+            //car0 = cars.get(0);
+            //car1 = cars.get(1);
+            //assertTrue(car0.getMaxPassengers()>= car1.getMaxPassengers());
+            for (int idx=0; idx<cars.size()-1; idx++) {
+                car0 = cars.get(idx);
+                car1 = cars.get(idx+1);
+                assertTrue(car0.getMaxPassengers()>=car1.getMaxPassengers());
+            }
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+            assertEquals(1,2);
+        }
+
     }
 
 }
