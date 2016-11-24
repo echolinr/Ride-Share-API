@@ -8,15 +8,18 @@
 package com.team4.uberapp.userSession;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.util.ErrorReport;
 
+import java.util.UUID;
+
 
 //@Data
-//@JsonIgnoreProperties( { "password","email" })
+@JsonIgnoreProperties( { "id" })
 public class UserSession implements Validable, Cloneable {
-    private Object id;
+    private UUID id;
     //private DateTime creationDate = new DateTime();
     private String email;
     private String password;
@@ -33,35 +36,34 @@ public class UserSession implements Validable, Cloneable {
         this.password  =  password;
         //generate token
     }
-
     public Object getId() {
         return id;
     }
 
-    public void setId(Object id) {
+    public void setId(UUID id) {
         this.id = id;
     }
-    @JsonIgnore
+//    @JsonProperty
     public String getEmail() {
         return email;
     }
-    @JsonProperty
+//    @JsonProperty
     public void setEmail(String email) {
         this.email = email;
     }
-    @JsonIgnore
+  //  @JsonIgnore
     public String getPassword() {
         return password;
     }
-    @JsonProperty
+ //   @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }
-
+    @JsonProperty
     public String getToken() {
         return token;
     }
-
+    @JsonIgnore
     public void setToken(String token) {
         this.token = token;
     }

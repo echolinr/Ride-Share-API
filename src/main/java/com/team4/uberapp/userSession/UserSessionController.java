@@ -15,7 +15,6 @@ import com.team4.uberapp.driver.Driver;
 import com.team4.uberapp.passenger.Passenger;
 import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.UberAppUtil;
-import org.bson.types.ObjectId;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
 import org.mongolink.domain.criteria.Order;
@@ -103,12 +102,17 @@ public class UserSessionController extends UberAppUtil {
         MongoSession session = MongoConfiguration.createSession();
         session.start();
         Repositories.initialise(new MongoRepositories(session));
-
+        UserSession userSession;
         try {
             Map<String, String> token = new HashMap<String, String>();
-            ObjectMapper mapper = new ObjectMapper();
-            UserSession userSession = mapper.readValue(req.body(), UserSession.class);
-
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                userSession = mapper.readValue(req.body(), UserSession.class);
+            } catch (Exception e) {
+                res.status(400);
+                res.type("application/json");
+                return dataToJson(e.getMessage());
+            }
             try {
                 userSession.isValid();
             } catch (Exception e){
@@ -128,7 +132,7 @@ public class UserSessionController extends UberAppUtil {
                     if (checkPassword(userSession.getPassword(),driver.getPassword())) {
                         // cleanup session
                         session.clear();
-                        userSession.setId(new ObjectId());
+                        userSession.setId(UUID.randomUUID());
                         // hash password
                         userSession.setPassword(hashPassword(userSession.getPassword()));
                         // generate session token
@@ -166,7 +170,7 @@ public class UserSessionController extends UberAppUtil {
                     if (checkPassword(userSession.getPassword(),passenger.getPassword())) {
                         // cleanup session
                         session.clear();
-                        userSession.setId(new ObjectId());
+                        userSession.setId(UUID.randomUUID());
                         // hash password
                         userSession.setPassword(hashPassword(userSession.getPassword()));
                         // generate session token

@@ -141,9 +141,14 @@ public class CarControllerTest {
                 "\"validRideTypes\" : \"ECONOMY\"}";
 
         try {
+            //make a post
             SparkTestUtil.UrlResponse response = http.doMethod("POST", "/v1/cars",reqestJson, "application/json");
+
+            //get result of the post
             ObjectMapper mapper = new ObjectMapper();
             Car testCar = mapper.readValue(response.body, Car.class);
+
+            //check db
             MongoSession session = MongoConfiguration.createSession();
             session.start();
             Repositories.initialise(new MongoRepositories(session));
@@ -151,7 +156,10 @@ public class CarControllerTest {
            // session.flush();
             Repositories.cars().delete(dbCar);
             session.stop();
+
+            assertEquals(200,response.status);
             assertNotNull(dbCar);
+
             assertEquals(testCar.getMake(), dbCar.getMake());
             assertEquals(testCar.getModel(), dbCar.getModel());
             assertEquals(testCar.getLicense(),dbCar.getLicense());

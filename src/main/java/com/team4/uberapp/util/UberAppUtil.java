@@ -137,7 +137,7 @@ public class UberAppUtil {
             JsonObject jsonObject = (JsonObject) new JsonParser().parse(claims.toString());
 
             if ((claims.getExpiration().getTime() > System.currentTimeMillis()) && (jsonObject.get("userID")!=null) && (jsonObject.get("userType")!=null) ) {
-                return (new AppUser(jsonObject.get("userID").toString(),jsonObject.get("userType").toString()));
+                return (new AppUser(jsonObject.get("userID").getAsString(),jsonObject.get("userType").getAsString()));
             } else {
                 return null;
             }
