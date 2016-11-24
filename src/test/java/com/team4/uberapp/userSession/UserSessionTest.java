@@ -63,6 +63,7 @@ public class UserSessionTest {
         try {
             //make a post
             SparkTestUtil.UrlResponse response = http.doMethod("POST", "/v1/cars", reqestJson, "application/json");
+            //should fail, because of no token
             assertEquals(401,response.status);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -84,6 +85,7 @@ public class UserSessionTest {
         try {
             //make a post
             SparkTestUtil.UrlResponse response = http.doMethod("POST", "/v1/rides", reqestJson, "application/json");
+            //should fail, because of no token
             assertEquals(401,response.status);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -105,6 +107,7 @@ public class UserSessionTest {
         try {
             //make a post
             SparkTestUtil.UrlResponse response = http.doMethod("POST", "/v1/drivers/", reqestJson, "application/json");
+            //should fail, because of no token
             assertEquals(401,response.status);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -129,6 +132,7 @@ public class UserSessionTest {
         try {
             //make a post
             SparkTestUtil.UrlResponse response = http.doMethod("POST", path, reqestJson, "application/json");
+            //should fail, because of no token
             assertEquals(401,response.status);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -151,18 +155,18 @@ public class UserSessionTest {
         Repositories.passengers().add(passenger);
         session.stop();
 
-        // using GET/v1/car/:id
+        // Login via passenger's email and password
         String path = "/v1/sessions";
         String reqestJson = "{" +
                 "\"email\" : \"tunit@west.abc.com\","+
                 "\"password\" : \"12345678\"}";
         try {
-            //make a post
+            //make a session post to login
             SparkTestUtil.UrlResponse response = http.doMethod("POST", path, reqestJson, "application/json");
-            //get result of the post
+            //get token from response
             ObjectMapper mapper = new ObjectMapper();
             SessionToken returnToken = mapper.readValue(response.body, SessionToken.class);
-            // remove testing data
+            // remove testing passenger data from db
             session = MongoConfiguration.createSession();
             session.start();
             Repositories.initialise(new MongoRepositories(session));
@@ -170,10 +174,11 @@ public class UserSessionTest {
             Repositories.passengers().delete(passenger);
             session.stop();
 
-            //verify value
+            //verify return response code
             assertEquals(201, response.status);
             AppUser appUser = validTokenUser(returnToken.getToken());
             assertNotNull(appUser);
+            //make sure right user ID is in the token
             assertEquals(passenger.getId().toString(),appUser.getUserID());
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -193,16 +198,16 @@ public class UserSessionTest {
         Repositories.passengers().add(passenger);
         session.stop();
 
-        // using GET/v1/car/:id
+        // Login via passenger's email and password, but email address is wrong
         String path = "/v1/sessions";
         String reqestJson = "{" +
                 "\"email\" : \"tunit@abc.com\","+
                 "\"password\" : \"12345678\"}";
         try {
-            //make a post
+            //login
             SparkTestUtil.UrlResponse response = http.doMethod("POST", path, reqestJson, "application/json");
 
-            // remove testing data
+            // remove testing  passenger data
             session = MongoConfiguration.createSession();
             session.start();
             Repositories.initialise(new MongoRepositories(session));
@@ -210,7 +215,7 @@ public class UserSessionTest {
             Repositories.passengers().delete(passenger);
             session.stop();
 
-            //verify value
+            //should failed because of wrong email addess
             assertEquals(401, response.status);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -230,19 +235,19 @@ public class UserSessionTest {
         Repositories.passengers().add(passenger);
         session.stop();
 
-        // using GET/v1/car/:id
+        // Prepare login post
         String path = "/v1/sessions";
         String reqestJson = "{" +
                 "\"email\" : \"tunit@west.abc.com\","+
                 "\"password\" : \"12345678\"}";
         try {
-            //make a post
+            //login
             SparkTestUtil.UrlResponse response = http.doMethod("POST", path, reqestJson, "application/json");
-            //get result of the post
+            //get token
             ObjectMapper mapper = new ObjectMapper();
             SessionToken returnToken = mapper.readValue(response.body, SessionToken.class);
 
-            //post a car
+            //prepare to post a car, add token
             path ="/v1/cars?token=" + returnToken.getToken();
             reqestJson = "{" +
                     "\"make\" : \"isuzu\","+
@@ -258,19 +263,19 @@ public class UserSessionTest {
             //get result of the post
             Car testCar = mapper.readValue(response.body, Car.class);
 
-            // check db
+            // check db directly to see if the car is in
             session = MongoConfiguration.createSession();
             session.start();
             Repositories.initialise(new MongoRepositories(session));
             Car dbCar =Repositories .cars().get(testCar.getId());
 
-            //removing testing data
+            //removing testing data, passenger & car
             Repositories.cars().delete(dbCar);
             passenger = Repositories.passengers().get(passenger.getId());
             Repositories.passengers().delete(passenger);
             session.stop();
 
-            //verify value
+            //verifying prepare car information and posted car in db are matching
             assertEquals(200, response.status);
             assertEquals(testCar.getId(),dbCar.getId());
             assertEquals(testCar.getMake(), dbCar.getMake());

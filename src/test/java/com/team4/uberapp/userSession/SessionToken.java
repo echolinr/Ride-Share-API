@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * Created by lzhai on 2016/11/24.
+ * This is used to get token from the login response
  */
 @Data
 public class SessionToken {
