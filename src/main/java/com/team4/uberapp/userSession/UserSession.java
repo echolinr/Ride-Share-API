@@ -1,34 +1,25 @@
-/*
- * MongoLink, Object Document Mapper for Java and MongoDB
+/**
+ * UserSession for user authentication session
  *
- * Copyright (c) 2012, Arpinum or third-party contributors as
- * indicated by the @author tags
- *
- * MongoLink is free software: you can redistribute it and/or modify
- * it under the terms of the Lesser GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MongoLink is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * Lesser GNU General Public License for more details.
- *
- * You should have received a copy of the Lesser GNU General Public License
- * along with MongoLink.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * @author  Lin Zhai
+ * @version 0.1
  */
 
 package com.team4.uberapp.userSession;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team4.uberapp.domain.Validable;
-import lombok.Data;
+import com.team4.uberapp.util.ErrorReport;
+
+import java.util.UUID;
 
 
-@Data
-//@JsonIgnoreProperties( { "password" })
+//@Data
+@JsonIgnoreProperties( { "id" })
 public class UserSession implements Validable, Cloneable {
-    private Object id;
+    private UUID id;
     //private DateTime creationDate = new DateTime();
     private String email;
     private String password;
@@ -45,14 +36,45 @@ public class UserSession implements Validable, Cloneable {
         this.password  =  password;
         //generate token
     }
+    public Object getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+//    @JsonProperty
+    public String getEmail() {
+        return email;
+    }
+//    @JsonProperty
+    public void setEmail(String email) {
+        this.email = email;
+    }
+  //  @JsonIgnore
+    public String getPassword() {
+        return password;
+    }
+ //   @JsonProperty
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    @JsonProperty
+    public String getToken() {
+        return token;
+    }
+    @JsonIgnore
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public boolean isValid() throws Exception {
         //Could set up any additional validation rule
         if (this.email.isEmpty() || this.email.length() > 50) {
-            throw new Exception("email at most 50 Characters");
+            throw new Exception(ErrorReport.toJson(5001, "email at most 50 Characters"));
         }
         if (this.password.isEmpty() ) {
-            throw new Exception("Password is empty");
+            throw new Exception(ErrorReport.toJson(5001, "Password is empty"));
         }
         return true;
     }

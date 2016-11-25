@@ -1,3 +1,10 @@
+/**
+ * Ride Controller, used for abstracting CRUD methods of rides
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.ride;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -7,6 +14,7 @@ import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
+import org.mongolink.domain.criteria.Restrictions;
 import spark.Route;
 
 import java.util.List;
@@ -16,6 +24,10 @@ import java.util.UUID;
  * Created by HectorGuo on 11/8/16.
  */
 public class RideController extends UberAppUtil {
+
+    /**
+     * The Spark Route getAll.
+     */
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -30,14 +42,17 @@ public class RideController extends UberAppUtil {
         return dataToJson(rides);
     };
 
+    /**
+     * The Spark Route getById.
+     */
     public static Route getById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        UUID uid = UUID.fromString(req.params(":id"));
-        Ride ride = Repositories.rides().get(uid);
+        UUID rideId = UUID.fromString(req.params(":id"));
+        Ride ride = Repositories.rides().get(rideId);
 
         session.stop();
         res.status(200);
@@ -45,6 +60,9 @@ public class RideController extends UberAppUtil {
         return dataToJson(ride);
     };
 
+    /**
+     * The Spark Route create.
+     */
     public static Route create = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -59,7 +77,7 @@ public class RideController extends UberAppUtil {
                 ride.isValid();
             } catch (Exception e){
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             ride.setId(UUID.randomUUID());
@@ -74,29 +92,26 @@ public class RideController extends UberAppUtil {
             session.stop();
             res.status(400);
             res.type("application/json");
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 
+    /**
+     * The Spark Route update.
+     */
     public static Route update = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        UUID uid = UUID.fromString(req.params(":id"));
-        Ride ride = Repositories.rides().get(uid);
+        UUID rideId = UUID.fromString(req.params(":id"));
+        Ride ride = Repositories.rides().get(rideId);
         Ride validationRide = (Ride) ride.clone();
 
         try{
             ObjectMapper mapper = new ObjectMapper();
             Ride updatedRide = mapper.readValue(req.body(), Ride.class);
-
-            if(updatedRide.getName() != null){
-                if(!updatedRide.getName().isEmpty()){
-                    validationRide.setName(updatedRide.getName());
-                }
-            }
 
 
             try{
@@ -104,10 +119,9 @@ public class RideController extends UberAppUtil {
             }catch (Exception e){
                 session.stop();
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
-            ride.setName(validationRide.getName());
             session.stop();
             res.status(200);
             res.type("application/json");
@@ -117,23 +131,84 @@ public class RideController extends UberAppUtil {
             session.stop();
             res.status(400);
             res.type("application/json");
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 
+    /**
+     * The Spark Route delById.
+     */
     public static Route delById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        UUID uid = UUID.fromString(req.params(":id"));
-        Ride ride = Repositories.rides().get(uid);
+        UUID rideId = UUID.fromString(req.params(":id"));
+        Ride ride = Repositories.rides().get(rideId);
         Repositories.rides().delete(ride);
 
         session.stop();
         res.status(200);
         res.type("application/json");
         return dataToJson("Ride Deleted");
+    };
+
+    /**
+     * The Spark Route addRoutePoints.
+     */
+    public static Route addRoutePoints = (req, res) -> {
+        final MongoSession session = MongoConfiguration.createSession();
+
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        try{
+            ObjectMapper mapper = new ObjectMapper();
+            RoutePoint routePoint = mapper.readValue(req.body(), RoutePoint.class);
+
+            UUID rideId = UUID.fromString(req.params(":id"));
+            Ride ride = Repositories.rides().get(rideId);
+
+            try {
+                ride.isValid();
+                routePoint.isValid();
+            } catch (Exception e){
+                res.status(400);
+                return e.getMessage();
+            }
+
+            routePoint.setId(UUID.randomUUID());
+            Repositories.routePoints().add(routePoint);
+
+            session.stop();
+            res.status(201);
+            res.type("application/json");
+            return dataToJson(routePoint);
+
+        }catch (JsonParseException e){
+            session.stop();
+            res.status(400);
+            res.type("application/json");
+            return e.getMessage();
+        }
+    };
+
+    /**
+     * The Spark Route getRoutePoints.
+     */
+    public static Route getRoutePoints = (req, res) -> {
+        final MongoSession session = MongoConfiguration.createSession();
+
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        UUID rideId = UUID.fromString(req.params(":id"));
+        List<RoutePoint> routePoints = Repositories.routePoints().find(Restrictions.equals("rideId", rideId));
+
+        session.stop();
+        res.status(200);
+        res.type("application/json");
+        return dataToJson(routePoints);
     };
 }

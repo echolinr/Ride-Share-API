@@ -1,5 +1,6 @@
 package com.team4.uberapp.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.JsonObject;
@@ -9,8 +10,6 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
-import java.io.IOException;
-import java.io.StringWriter;
 import java.security.Key;
 import java.util.Date;
 
@@ -19,16 +18,30 @@ import java.util.Date;
  * Modified by Lin Zhai on 11/17, add hash and token function.
  */
 public class UberAppUtil {
+    /**
+     * This method can be used to convert a java object to json string
+     * Using ObjectMapper, This will work with jackson annotation
+     * @param data Java Object need to convert
+     * @return String - serialized object string
+     */
     public static String dataToJson(Object data) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
-            StringWriter sw = new StringWriter();
-            mapper.writeValue(sw, data);
-            return sw.toString();
-        } catch (IOException e) {
-            throw new RuntimeException("IOEXception while mapping object to JSON");
+            return mapper.writeValueAsString(data);
+        } catch (JsonProcessingException e) {
+            return e.getMessage();
         }
+    }
+    /**
+     * This method can be used to convert a string to json object
+     * @param data json format string
+     * @return String - deserialize into json object
+     */
+    public static JsonObject stringToJson(String data) {
+        JsonParser parser = new JsonParser();
+        JsonObject o = parser.parse(data).getAsJsonObject();
+        return o;
     }
 
     // Define the BCrypt workload to use when generating password hashes. 10-31 is a valid value.
@@ -75,7 +88,7 @@ public class UberAppUtil {
      * @param userId The account's plaintext password, as provided during a login request
      * @return String - generate token with username
      */
-    public static String createToken(String userId) {
+    public static String createToken(String userId, String userType) {
 
         //The JWT signature algorithm we will be using to sign the token
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -92,6 +105,7 @@ public class UberAppUtil {
         customClaims.setIssuedAt(now);
         customClaims.setExpiration(new Date(System.currentTimeMillis() + tokenTTL));
         customClaims.put("userID", userId);
+        customClaims.put("userType", userType);
 
         //Let's set the JWT Claims
         JwtBuilder builder = Jwts.builder()
@@ -112,20 +126,25 @@ public class UberAppUtil {
      * 1) userID is contained in token
      * 2) token is no expired
      * @param jwtToken a jwt token
-     * @return String - userID in token if not expired or null
+     * @return AppUser - userID in token if not expired or null
      */
-    public static String validTokenUser(String jwtToken) {
+    public static AppUser validTokenUser(String jwtToken) {
         //This line will throw an exception if it is not a signed JWS (as expected)
-        Claims claims = Jwts.parser()
-                .setSigningKey(DatatypeConverter.parseBase64Binary(tokenSecret))
-                .parseClaimsJws(jwtToken).getBody();
-        JsonObject jsonObject = (JsonObject) new JsonParser().parse(claims.toString());
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(tokenSecret))
+                    .parseClaimsJws(jwtToken).getBody();
+            JsonObject jsonObject = (JsonObject) new JsonParser().parse(claims.toString());
 
-        if ((claims.getExpiration().getTime() > System.currentTimeMillis()) && (jsonObject.get("userID")!=null) ) {
-            return jsonObject.get("userID").toString();
-        } else {
+            if ((claims.getExpiration().getTime() > System.currentTimeMillis()) && (jsonObject.get("userID")!=null) && (jsonObject.get("userType")!=null) ) {
+                return (new AppUser(jsonObject.get("userID").getAsString(),jsonObject.get("userType").getAsString()));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
             return null;
         }
+
         //System.out.println("ID: " + claims.getId());
         //System.out.println("Subject: " + claims.getSubject());
         //System.out.println("Issuer: " + claims.getIssuer());

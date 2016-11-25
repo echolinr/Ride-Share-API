@@ -23,6 +23,8 @@ package com.team4.uberapp.persistence;
 
 import org.mongolink.MongoSession;
 import com.team4.uberapp.domain.Repository;
+import org.mongolink.domain.criteria.Criteria;
+import org.mongolink.domain.criteria.Restriction;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
@@ -53,6 +55,12 @@ public abstract class MongoRepository<T> implements Repository<T> {
         return session.getAll(persistentType());
     }
 
+    @Override
+    public List<T> find(Restriction query) {
+        Criteria criteria = session.createCriteria(persistentType());
+        criteria.add(query);
+        return criteria.list();
+    }
 
     protected final Class<T> persistentType() {
         final ParameterizedType superclass = (ParameterizedType) getClass().getGenericSuperclass();

@@ -1,3 +1,10 @@
+/**
+ * Car Controller, used for abstracting CRUD methods of cars
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.car;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -19,10 +26,22 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Created by HectorGuo on 11/8/16.
+ * CarController: car routes for get/post/...
+ *
+ * @author  Lin Zhai & Hector Guo
+ * @version 0.2
  */
 public class CarController extends UberAppUtil {
     // GET /cars  Get all cars
+    /**
+     * Implementation  for route:
+     *      //GET/cars  -- get all cars
+     *      //Get/cars for querying parameters count, offsetId, sort & sortOrder
+     *      Used in combination with sort, it specifies the order in which to return the elements. asc is for asending
+     *      or desc for descending. Default value is asc except for a time-based sort field in which case the default values is desc
+     *
+     * @return AppUser - userID in token if not expired or null
+     */
     public static Route getAll = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -84,8 +103,6 @@ public class CarController extends UberAppUtil {
             return dataToJson("No cars");
         } else {
             return dataToJson(cars);
-            //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            //return gson.toJson(cars);
         }
 
     };
@@ -166,6 +183,8 @@ public class CarController extends UberAppUtil {
                 i = 1;
             }
 */
+            res.type("application/json");
+
             try {
                 car.isValid();
             } catch (Exception e){
@@ -179,12 +198,10 @@ public class CarController extends UberAppUtil {
             session.stop();
 
             //prepare return result
-            res.type("application/json");
             res.status(200);
             return dataToJson(car);
         }  catch (Exception e){
             session.stop();
-            res.type("application/json");
             res.status(400);
             return dataToJson(e.getMessage());
         }
@@ -321,7 +338,7 @@ public class CarController extends UberAppUtil {
                 } catch (Exception e) {
                     session.stop();
                     res.type("application/json");
-                    return  dataToJson(e.getMessage());
+                    return  e.getMessage();
                 }
 
                 //update value
@@ -339,7 +356,7 @@ public class CarController extends UberAppUtil {
                 session.stop();
                 res.type("application/json");
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
         }
     };
@@ -367,7 +384,7 @@ public class CarController extends UberAppUtil {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             car.setId(UUID.randomUUID());
@@ -383,7 +400,7 @@ public class CarController extends UberAppUtil {
             session.stop();
             res.status(400);
             res.type("application/json");
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 

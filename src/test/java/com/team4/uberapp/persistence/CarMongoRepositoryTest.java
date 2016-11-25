@@ -21,59 +21,108 @@
 
 package com.team4.uberapp.persistence;
 
+import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.car.Car;
-import org.junit.Rule;
+import com.team4.uberapp.domain.Repositories;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import com.team4.uberapp.domain.*;
-import com.team4.uberapp.test.WithRepository;
+import org.mongolink.MongoSession;
 
 import java.util.List;
+import java.util.UUID;
 
-import static org.fest.assertions.Assertions.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertNull;
+
+//import org.mongolink.MongoSession;
 
 public class CarMongoRepositoryTest {
 
-    @Rule
-    public WithRepository withRepository = new WithRepository();
+    //@Rule
+    MongoSession session;
+    //public WithRepository withRepository = new WithRepository();
+
+    @Before
+    public void setUp() throws Exception {
+        session  = MongoConfiguration.createSession();
+        session.start();
+        Repositories.initialise(new MongoRepositories(session));
+
+        System.out.println("==========Setup test===============");
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        System.out.println("==========Stop test===============");
+        session.stop();
+    }
 
     @Test
     public void canAdd() {
+
         Car car = new Car("vw", "beetle", "5PVXXX", "Sedan", 4,"white", "ECONOMY");
+        car.setId(UUID.randomUUID());
         Repositories.cars().add(car);
-        withRepository.cleanSession();
+        session.flush();
 
         Car carFound = Repositories.cars().get(car.getId());
+        Repositories.cars().delete(car);
+        session.flush();
 
-        assertThat(carFound).isNotNull();
-        assertThat(carFound.getMake()).isEqualTo("vw");
-        assertThat(carFound.getId()).isNotNull();
-        assertThat(carFound.getModel()).isEqualTo("beetle");
-        assertThat(carFound.getLicense()).isEqualTo("5PVXXX");
-        assertThat(carFound.getMaxPassengers() == 4);
-        assertThat(carFound.getColor()).isEqualTo("white");
-        assertThat(carFound.getValidRideTypes()).isEqualTo("ECONOMY");
+        assertNotNull(carFound);
+        assertEquals(carFound.getMake(),car.getMake());
+        assertNotNull(carFound.getId());
+        assertEquals(carFound.getModel(),car.getModel());
+        assertEquals(carFound.getLicense(),car.getLicense());
+        assertEquals(carFound.getMaxPassengers(),car.getMaxPassengers());
+        assertEquals(carFound.getColor(),car.getColor());
+        assertEquals(carFound.getValidRideTypes(),car.getValidRideTypes());
     }
 
     @Test
     public void canDelete() {
+        //session.start();
+        //Repositories.initialise(new MongoRepositories(session));
+
         Car car = new Car("toyota", "camery", "7WZXXX", "Sedan", 4, "white", "PREMIUM" );
+        car.setId(UUID.randomUUID());
         Repositories.cars().add(car);
-
+        session.flush();
         Repositories.cars().delete(car);
-        withRepository.cleanSession();
+        session.flush();
+        //withRepository.cleanSession();
 
-        assertThat(Repositories.cars().get(car.getId())).isNull();
+        car = Repositories.cars().get(car.getId());
+
+        assertNull(car);
     }
 
     @Test
     public void canGetAll() {
-        Repositories.cars().add( new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "white", "ECONOMY"));
-        Repositories.cars().add(new Car("toyota", "camery", "7WZXXX", "Sedan", 4,"white",  "PREMIUM"));
-        withRepository.cleanSession();
+        //session.start();
+        //Repositories.initialise(new MongoRepositories(session));
+
+        Car car1 = new Car("vw", "beetle", "5PVXXX", "Sedan", 4, "white", "ECONOMY");
+        car1.setId(UUID.randomUUID());
+        Car car2 = new Car("toyota", "camery", "7WZXXX", "Sedan", 4,"white",  "PREMIUM");
+        car2.setId(UUID.randomUUID());
+        int carSize;
 
         List<Car> cars = Repositories.cars().all();
+        carSize = cars.size();
+        session.clear();
+        Repositories.cars().add(car1);
+        Repositories.cars().add(car2);
+        session.flush();
+        //withRepository.cleanSession();
 
-        assertThat(cars).hasSize(2);
+        cars = Repositories.cars().all();
+        carSize = cars.size() - carSize;
+        Repositories.cars().delete(car1);
+        Repositories.cars().delete(car2);
+        assertEquals(carSize,2);
     }
 
 }

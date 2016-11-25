@@ -1,3 +1,10 @@
+/**
+ * Passenger Controller, used for abstracting CRUD methods of passengers
+ *
+ * @author  Hector Guo, Lin Zhai
+ * @version 1.0
+ * @since   2016-11-18
+ */
 package com.team4.uberapp.passenger;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -19,7 +26,10 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Created by lzhai on 2016/11/10.
+ * PassengerController: car routes for get/post/...
+ *
+ * @author  Lin Zhai & Hector Guo
+ * @version 0.2
  */
 public class PassengerController extends UberAppUtil {
     // GET /passengers  Get all passengers
@@ -74,6 +84,7 @@ public class PassengerController extends UberAppUtil {
         /* close database connection */
         session.stop();
         res.status(200);
+        res.type("application/json");
         return dataToJson(passengers);
 
     };
@@ -118,7 +129,7 @@ public class PassengerController extends UberAppUtil {
             } catch (Exception e){
                 res.status(400);
                 res.type("application/json");
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             Criteria criteria = session.createCriteria(Driver.class); // create criteria object
@@ -150,7 +161,7 @@ public class PassengerController extends UberAppUtil {
             session.stop();
             res.type("application/json");
             res.status(400);
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 
@@ -274,7 +285,7 @@ public class PassengerController extends UberAppUtil {
                 } catch (Exception e) {
                     session.stop();
                     res.type("application/json");
-                    return  dataToJson(e.getMessage());
+                    return e.getMessage();
                 }
 
                 //update value
@@ -295,7 +306,7 @@ public class PassengerController extends UberAppUtil {
                 session.stop();
                 res.type("application/json");
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 /*
             int i =0;

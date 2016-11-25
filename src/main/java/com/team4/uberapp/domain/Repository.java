@@ -23,6 +23,7 @@ package com.team4.uberapp.domain;
 
 
 import java.util.List;
+import org.mongolink.domain.criteria.Restriction;
 
 public interface Repository<T> {
 
@@ -33,4 +34,6 @@ public interface Repository<T> {
     void add(T entité);
 
     List<T> all();
+
+    List<T> find(Restriction query);
 }
