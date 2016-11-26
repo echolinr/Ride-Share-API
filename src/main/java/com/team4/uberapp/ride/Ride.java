@@ -9,6 +9,7 @@ import com.team4.uberapp.location.Coordinate;
 import com.team4.uberapp.util.ErrorReport;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 //@Data
@@ -162,6 +163,12 @@ public class Ride implements Validable {
         //Could set up any additional validation rule
         if (this.rideType.isEmpty()){
             throw new Exception(ErrorReport.toJson(4001, "The Ride name should not be empty"));
+        }
+        if (this.status != "REQUESTED" && this.status != "AWAITING_DRIVER" && this.status != "DRIVE_ASSIGNED" && this.status != "IN_PROGRESS" && this.status != "ARRIVED" && this.status != "CLOSED") {
+            throw new Exception(ErrorReport.toJson(4001, "The Ride status should be REQUESTED, AWAITING_DRIVER, DRIVE_ASSIGNED, IN_PROGRESS, ARRIVED or CLOSED"));
+        }
+        if (this.rideType != "ECONOMY" && this.rideType != "PREMIUM "&& this.rideType != "EXECUTIVE") {
+            throw new Exception(ErrorReport.toJson(4001, "The rideType should be ECONOMY, PREMIUM or EXECUTIVE"));
         }
         return true;
     }
