@@ -13,6 +13,7 @@ import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
 import com.team4.uberapp.driver.Driver;
 import com.team4.uberapp.persistence.MongoRepositories;
+import com.team4.uberapp.util.ErrorReport;
 import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Criteria;
@@ -99,11 +100,8 @@ public class CarController extends UberAppUtil {
 
         res.status(200);
         res.type("application/json");
-        if (cars.size() == 0) {
-            return dataToJson("No cars");
-        } else {
-            return dataToJson(cars);
-        }
+
+        return dataToJson(cars);
 
     };
 
@@ -114,20 +112,27 @@ public class CarController extends UberAppUtil {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        // get car by id, generate UUID from string id first
-        UUID uid = UUID.fromString(req.params(":id"));
-        Car car = Repositories.cars().get(uid);
+        try {
+            // get car by id, generate UUID from string id first
+            UUID uid = UUID.fromString(req.params(":id"));
+            Car car = Repositories.cars().get(uid);
 
-        // close database connection
-        session.stop();
+            // close database connection
+            session.stop();
 
-        res.type("application/json");
-        if (car == null) {
-            res.status(404); // 404 Not found
-            return dataToJson("Car: " + req.params(":id") +" not found");
-        } else {
-            res.status(200);
-            return dataToJson(car);
+            res.type("application/json");
+            if (car == null) {
+                res.status(404); // 404 Not found
+                return dataToJson("Car: " + req.params(":id") + " not found");
+            } else {
+                res.status(200);
+                return dataToJson(car);
+            }
+        } catch (Exception e){
+            session.stop();
+            res.status(400);
+            res.type("application/json");
+            return ErrorReport.toJson(2001, e.getMessage());
         }
     };
 
@@ -189,7 +194,7 @@ public class CarController extends UberAppUtil {
                 car.isValid();
             } catch (Exception e){
                 res.status(400);
-                return dataToJson(e.getMessage());
+                return e.getMessage();
             }
 
             Repositories.cars().add(car);
@@ -198,12 +203,12 @@ public class CarController extends UberAppUtil {
             session.stop();
 
             //prepare return result
-            res.status(200);
+            res.status(201);
             return dataToJson(car);
         }  catch (Exception e){
             session.stop();
             res.status(400);
-            return dataToJson(e.getMessage());
+            return e.getMessage();
         }
     };
 
@@ -291,7 +296,7 @@ public class CarController extends UberAppUtil {
             }
             */
 
-            // clone a passenger for validation purpose
+            // clone a car for validation purpose
             Car validationCar = (Car) car.clone();
             try {
                 ObjectMapper mapper = new ObjectMapper();

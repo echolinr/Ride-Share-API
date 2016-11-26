@@ -4,7 +4,7 @@ package com.team4.uberapp.driver;
  * Driver Class defines the object format for car in MongoDB
  *
  * @author  Lin Zhai  & Hector Guo
- * @version 0.2
+ * @version 0.3
  */
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,9 +17,8 @@ import java.util.regex.Pattern;
 
 //@Data
 //@JsonIgnoreProperties( { "password" })
-public class Driver implements Validable {
+public class Driver implements Validable, Cloneable {
     private UUID id;
-    private String name;
     private String firstName; // maximum 50 characters
     private String lastName; // maximum 50 characters
     private String emailAddress; // will add valid format later
@@ -44,14 +43,6 @@ public class Driver implements Validable {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getFirstName() {
@@ -196,11 +187,11 @@ public class Driver implements Validable {
         }
         //valid addressLine1 length
         if (this.addressLine1 == null || this.addressLine1.isEmpty() || this.addressLine1.length() >100){
-            throw new Exception(ErrorReport.toJson(1001, "The firstName length should not greater than 50 Characters"));
+            throw new Exception(ErrorReport.toJson(1001, "The firstName length should not greater than 100 Characters"));
         }
         //valid addressLine2 length, addressLine2 is optional, could be empty
         if (this.addressLine2 == null || this.addressLine2.length() > 100) {
-            throw new Exception(ErrorReport.toJson(1001, "The lastName length should not greater than 50 Characters"));
+            throw new Exception(ErrorReport.toJson(1001, "The lastName length should not greater than 100 Characters"));
         }
         //valid passowrd
         //if (this.password == null || this.password.isEmpty() || this.password.length()<8 || this.password.length()>20) {
@@ -216,7 +207,7 @@ public class Driver implements Validable {
         }
         //zip
         if (this.zip == null || this.zip.isEmpty() || this.zip.length()!=5) {
-            throw new Exception(ErrorReport.toJson(1001, "The zip length must be 2"));
+            throw new Exception(ErrorReport.toJson(1001, "The zip length must be 5"));
         }
         //emailAddress
 
@@ -242,7 +233,7 @@ public class Driver implements Validable {
 
         //licensedState
         if (this.licensedState == null || this.licensedState.isEmpty() || this.licensedState.length()!=2 ) {
-            throw new Exception(ErrorReport.toJson(1001, "The zip length must be 2"));
+            throw new Exception(ErrorReport.toJson(1001, "The licensedState length must be 2"));
         }
 
         return true;

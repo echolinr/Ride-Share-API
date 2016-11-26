@@ -72,14 +72,16 @@ public class UberAppMain {
         //delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
 
         //add access control
-        if (args == null) {
+//        if (args == null) {
             before((request, response) -> {
                 String method = request.requestMethod();
                 if (method.equals("POST")) {
                     if (request.pathInfo().equals(versionURI + "/rides") ||
                             request.pathInfo().equals(versionURI + "/cars") ||
-                            request.pathInfo().equals(versionURI + "/drivers/")) {
+                            request.pathInfo().equals(versionURI + "/drivers/") ||
+                            request.pathInfo().equals(versionURI + "/passengers/")) {
                         String token = request.queryParams("token");
+                        token = token == null ? request.headers("x-access-token") : token;
                         if (token == null) {
                             halt(401, "User unathorized");
                         } else if (validTokenUser(token) == null) {
@@ -88,6 +90,6 @@ public class UberAppMain {
                     }
                 }
             });
-        }
+//        }
     }
 }
