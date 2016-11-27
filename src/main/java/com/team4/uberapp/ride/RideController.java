@@ -11,11 +11,13 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
+import com.team4.uberapp.location.Coordinate;
 import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Restrictions;
 import spark.Route;
+import com.google.gson.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -72,11 +74,45 @@ public class RideController extends UberAppUtil {
         try{
             ObjectMapper mapper = new ObjectMapper();
             Ride ride = mapper.readValue(req.body(), Ride.class);
+//            Gson gson = new Gson();
+//            JsonObject rideJson = gson.fromJson(req.body(), JsonObject.class);
+//
+//            // get startPoint and endPoint
+//            JsonElement start = rideJson.getAsJsonObject("startPoint");
+//            float startLat = start.getAsJsonObject().get("lat").getAsFloat();
+//            float startLng = start.getAsJsonObject().get("long").getAsFloat();
+//            JsonElement end = rideJson.getAsJsonObject("endPoint");
+//            float endLat = end.getAsJsonObject().get("lat").getAsFloat();
+//            float endLng = end.getAsJsonObject().get("long").getAsFloat();
+//
+//            // get timestamp
+//            Number requestTime = rideJson.get("requestTime").getAsNumber();
+//            Number pickupTime = rideJson.get("pickupTime").getAsNumber();
+//            Number dropOffTime = rideJson.get("dropOffTime").getAsNumber();
+//
+//            // initial ride
+//            Ride ride = new Ride();
+//
+//            ride.setCarId(UUID.fromString(rideJson.get("carId").getAsString()));
+//            ride.setDriverId(UUID.fromString(rideJson.get("driverId").getAsString()));
+//            ride.setPassengerId(UUID.fromString(rideJson.get("passengerId").getAsString()));
+//
+//            ride.setStartPoint(new Coordinate(startLat, startLng));
+//            ride.setEndPoint(new Coordinate(endLat, endLng));
+//
+//            ride.setRequestTime(requestTime);
+//            ride.setDropOffTime(dropOffTime);
+//            ride.setPickupTime(pickupTime);
+//
+//            ride.setRideType(rideJson.get("rideType").getAsString());
+//            ride.setStatus(rideJson.get("status").getAsString());
+//            ride.setFare(rideJson.get("fare").getAsInt());
 
             try {
                 ride.isValid();
             } catch (Exception e){
                 res.status(400);
+                res.type("application/json");
                 return e.getMessage();
             }
 
@@ -178,6 +214,7 @@ public class RideController extends UberAppUtil {
                 return e.getMessage();
             }
 
+            routePoint.setRideId(rideId);
             routePoint.setId(UUID.randomUUID());
             Repositories.routePoints().add(routePoint);
 
