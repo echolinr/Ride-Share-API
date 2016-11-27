@@ -1,11 +1,11 @@
 package com.team4.uberapp.util;
 
-//import lombok.Data;
+import lombok.Data;
 
 /**
  * Created by lzhai on 2016/11/17.
  */
-//@Data
+@Data
 public class AppUser {
     private String userType;
     private String userID;
