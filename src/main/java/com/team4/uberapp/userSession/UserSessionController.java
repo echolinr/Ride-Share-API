@@ -92,7 +92,7 @@ public class UserSessionController extends UberAppUtil {
         }
 
     };
-    // POST /usersessions  Create usersessions
+    // POST /sessions  Create sessions
     public static Route create = (req, res) -> {
         Driver driver;
         Passenger passenger;

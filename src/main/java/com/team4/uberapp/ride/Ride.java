@@ -8,18 +8,21 @@ import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.location.Coordinate;
 import com.team4.uberapp.util.ErrorReport;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 //@Data
 public class Ride implements Validable {
     private UUID id;
     private String rideType;
-    private Coordinate startPoint;
-    private Coordinate endPoint;
-    private Timestamp requestTime;
-    private Timestamp pickupTime;
-    private Timestamp dropOffTime;
+    private Number startLat;
+    private Number startLong;
+    private Number endLat;
+    private Number endLong;
+//    private Coordinate startPoint;
+//    private Coordinate endPoint;
+    private Number requestTime;
+    private Number pickupTime;
+    private Number dropOffTime;
     private String status;
     private int fare;
     private UUID driverId;
@@ -48,43 +51,51 @@ public class Ride implements Validable {
         this.rideType = rideType;
     }
 
-    public Coordinate getStartPoint() {
-        return startPoint;
-    }
+    public Number getStartLat() {return startLat; }
+    public Number getStartLong() {return startLong; }
+    public Number getEndLat() {return endLat; }
+    public Number getEndLong() {return endLong; }
+    public void setStartLat(Number startLat) {this.startLat = startLat;}
+    public void setStartLong(Number startLong) {this.startLong = startLong;}
+    public void setEndLat(Number endLat) {this.endLat = endLat;}
+    public void setEndLong(Number endLong) {this.endLong = endLong;}
+//    public Coordinate getStartPoint() {
+//        return startPoint;
+//    }
+//
+//    public void setStartPoint(Coordinate startPoint) {
+//        this.startPoint = startPoint;
+//    }
+//
+//    public Coordinate getEndPoint() {
+//        return endPoint;
+//    }
+//
+//    public void setEndPoint(Coordinate endPoint) {
+//        this.endPoint = endPoint;
+//    }
 
-    public void setStartPoint(Coordinate startPoint) {
-        this.startPoint = startPoint;
-    }
-
-    public Coordinate getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(Coordinate endPoint) {
-        this.endPoint = endPoint;
-    }
-
-    public Timestamp getRequestTime() {
+    public Number getRequestTime() {
         return requestTime;
     }
 
-    public void setRequestTime(Timestamp requestTime) {
+    public void setRequestTime(Number requestTime) {
         this.requestTime = requestTime;
     }
 
-    public Timestamp getPickupTime() {
+    public Number getPickupTime() {
         return pickupTime;
     }
 
-    public void setPickupTime(Timestamp pickupTime) {
+    public void setPickupTime(Number pickupTime) {
         this.pickupTime = pickupTime;
     }
 
-    public Timestamp getDropOffTime() {
+    public Number getDropOffTime() {
         return dropOffTime;
     }
 
-    public void setDropOffTime(Timestamp dropOffTime) {
+    public void setDropOffTime(Number dropOffTime) {
         this.dropOffTime = dropOffTime;
     }
 
@@ -128,12 +139,15 @@ public class Ride implements Validable {
         this.passengerId = passengerId;
     }
 
+
     /**
      * Instantiates a new Ride.
      *
      * @param rideType    the ride type
-     * @param startPoint  the start point
-     * @param endPoint    the end point
+     * @param startLat    the start lat
+     * @param startLong   the start long
+     * @param endLat      the end lat
+     * @param endLong     the end long
      * @param requestTime the request time
      * @param pickupTime  the pickup time
      * @param dropOffTime the drop off time
@@ -143,11 +157,15 @@ public class Ride implements Validable {
      * @param carId       the car id
      * @param passengerId the passenger id
      */
-    public Ride(String rideType, Coordinate startPoint, Coordinate endPoint, Timestamp requestTime, Timestamp pickupTime, Timestamp dropOffTime, String status, int fare, UUID driverId, UUID carId, UUID passengerId) {
+    public Ride(String rideType, Number startLat, Number startLong, Number endLat, Number endLong, Number requestTime, Number pickupTime, Number dropOffTime, String status, int fare, UUID driverId, UUID carId, UUID passengerId) {
         this.id = UUID.randomUUID();
         this.rideType = rideType;
-        this.startPoint = startPoint;
-        this.endPoint = endPoint;
+//        this.startPoint = startPoint;
+//        this.endPoint = endPoint;
+        this.startLat = startLat;
+        this.startLong = startLong;
+        this.endLat = endLat;
+        this.endLong = endLong;
         this.requestTime = requestTime;
         this.pickupTime = pickupTime;
         this.dropOffTime = dropOffTime;
@@ -162,6 +180,12 @@ public class Ride implements Validable {
         //Could set up any additional validation rule
         if (this.rideType.isEmpty()){
             throw new Exception(ErrorReport.toJson(4001, "The Ride name should not be empty"));
+        }
+        if (!this.status.equals("REQUESTED") && !this.status.equals("AWAITING_DRIVER") && !this.status.equals("DRIVE_ASSIGNED") && !this.status.equals("IN_PROGRESS") && !this.status.equals("ARRIVED") && !this.status.equals("CLOSED")) {
+            throw new Exception(ErrorReport.toJson(4001, "The Ride status should be REQUESTED, AWAITING_DRIVER, DRIVE_ASSIGNED, IN_PROGRESS, ARRIVED or CLOSED"));
+        }
+        if (!this.rideType.equals("ECONOMY") && !this.rideType.equals("PREMIUM") && !this.rideType.equals("EXECUTIVE")) {
+            throw new Exception(ErrorReport.toJson(4001, "The rideType should be ECONOMY, PREMIUM or EXECUTIVE"));
         }
         return true;
     }

@@ -93,18 +93,25 @@ public class DriverController extends UberAppUtil {
         session.start();
         Repositories.initialise(new MongoRepositories(session));
 
-        UUID uid = UUID.fromString(req.params(":id"));
-        Driver driver = Repositories.drivers().get(uid);
+        try {
+            UUID uid = UUID.fromString(req.params(":id"));
+            Driver driver = Repositories.drivers().get(uid);
 
-        session.stop();
-        res.status(200);
-        res.type("application/json");
-        if (driver == null) {
-            res.status(404); // 404 Not found
-            return dataToJson("Driver: " + req.params(":id") +" not found");
-        } else {
+            session.stop();
             res.status(200);
-            return dataToJson(driver);
+            res.type("application/json");
+            if (driver == null) {
+                res.status(404); // 404 Not found
+                return dataToJson("Driver: " + req.params(":id") + " not found");
+            } else {
+                res.status(200);
+                return dataToJson(driver);
+            }
+        } catch (Exception e){
+            session.stop();
+            res.status(400);
+            res.type("application/json");
+            return ErrorReport.toJson(1001, e.getMessage());
         }
     };
 
@@ -116,6 +123,7 @@ public class DriverController extends UberAppUtil {
         try{
             ObjectMapper mapper = new ObjectMapper();
             Driver driver = mapper.readValue(req.body(), Driver.class);
+            String email = driver.getEmailAddress();
 
             try {
                 driver.isValid();
@@ -126,31 +134,29 @@ public class DriverController extends UberAppUtil {
             }
 
             Criteria criteria = session.createCriteria(Passenger.class); // create criteria object
-            criteria.add(Restrictions.equals("emailAddress", driver.getEmailAddress()));
+            criteria.add(Restrictions.equals("emailAddress", email));
             // emailAddress for driver must be unique in both driver & passenger
             if (criteria.list() == null || criteria.list().isEmpty()) {
                 // no such emailAddrss in passenger, check driver now
                 session.clear();
                 criteria = session.createCriteria(Driver.class);
-                criteria.add(Restrictions.equals("emailAddress", driver.getEmailAddress()));
+                criteria.add(Restrictions.equals("emailAddress", email));
                 if (criteria.list() == null || criteria.list().isEmpty()) {
                     driver.setId(UUID.randomUUID()); //generate UUID for driver
                     driver.setPassword(hashPassword(driver.getPassword()));
                     //session.clear();
                     Repositories.drivers().add(driver);
+
+                    session.stop();
+                    res.status(201);
+                    res.type("application/json");
+                    return dataToJson(driver);
                 }
-
-                session.stop();
-                res.status(201);
-                res.type("application/json");
-                return dataToJson(driver);
-
-            } else {
-                session.stop();
-                res.status(400);
-                res.type("application/json");
-                return ErrorReport.toJson(1001, "Driver has conflict email address： " + driver.getEmailAddress());
             }
+            session.stop();
+            res.status(400);
+            res.type("application/json");
+            return ErrorReport.toJson(1001, "Driver has conflict email address： " + driver.getEmailAddress());
 
         }catch (JsonParseException e){
             session.stop();

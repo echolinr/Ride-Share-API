@@ -14,9 +14,8 @@ public class RoutePointMapping extends AggregateMap<RoutePoint> {
     public void map() {
         id().onProperty(element().getId()).natural();
         property().onField("timestamp");
-        property().onField("point");
-//        property().onProperty(element().getPoint());
-        //property().(element().getValidRideTypes().    );
-        //property().onProperty(element().getCreationDate());
+        property().onField("lat");
+        property().onField("lng");
+        property().onField("rideId");
     }
 }

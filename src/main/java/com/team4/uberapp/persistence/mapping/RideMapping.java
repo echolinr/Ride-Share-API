@@ -31,8 +31,12 @@ public class RideMapping extends AggregateMap<Ride> {
     public void map() {
         id().onProperty(element().getId()).natural();
         property().onField("rideType");
-        property().onField("startPoint");
-        property().onField("endPoint");
+//        property().onField("startPoint");
+//        property().onField("endPoint");
+        property().onField("startLat");
+        property().onField("startLong");
+        property().onField("endLat");
+        property().onField("endLong");
         property().onField("requestTime");
         property().onField("pickupTime");
         property().onField("dropOffTime");

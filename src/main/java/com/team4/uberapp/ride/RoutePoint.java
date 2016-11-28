@@ -7,14 +7,14 @@ package com.team4.uberapp.ride;
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.location.Coordinate;
 
-import java.sql.Timestamp;
 import java.util.UUID;
 
 //@Data
 public class RoutePoint implements Validable {
     private UUID id;
-    private Coordinate point;
-    private Timestamp timestamp;
+    private Number lat;
+    private Number lng;
+    private Number timestamp;
     private UUID rideId;
 
 
@@ -24,9 +24,10 @@ public class RoutePoint implements Validable {
         // for mongolink
     }
 
-    public RoutePoint(float lat, float lng, Timestamp timestamp, UUID rideId) {
+    public RoutePoint(float lat, float lng, Number timestamp, UUID rideId) {
         this.id = UUID.randomUUID();
-        this.point = new Coordinate(lat, lng);
+        this.lat = lat;
+        this.lng = lng;
         this.timestamp = timestamp;
         this.rideId = rideId;
     }
@@ -39,19 +40,27 @@ public class RoutePoint implements Validable {
         this.id = id;
     }
 
-    public Coordinate getPoint() {
-        return point;
+    public Number getLat() {
+        return lat;
     }
 
-    public void setPoint(Coordinate point) {
-        this.point = point;
+    public void setLat(Number lat) {
+        this.lat = lat;
     }
 
-    public Timestamp getTimestamp() {
+    public Number getLng() {
+        return lng;
+    }
+
+    public void setLng(Number lng) {
+        this.lng = lng;
+    }
+
+    public Number getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Number timestamp) {
         this.timestamp = timestamp;
     }
 
