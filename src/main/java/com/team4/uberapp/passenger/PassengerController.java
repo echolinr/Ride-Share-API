@@ -114,7 +114,7 @@ public class PassengerController extends UberAppUtil {
         }
     };
 
-    // POST /cars  Create car
+    // POST /passengers  Create passenger
     public static Route create = (req, res) -> {
         /* initialize db connection */
         MongoSession session = MongoConfiguration.createSession();
@@ -129,12 +129,12 @@ public class PassengerController extends UberAppUtil {
             } catch (Exception e){
                 res.status(400);
                 res.type("application/json");
-                return e.getMessage();
+                return dataToJson(e.getMessage());
             }
 
             Criteria criteria = session.createCriteria(Driver.class); // create criteria object
             criteria.add(Restrictions.equals("emailAddress", passenger.getEmailAddress()));
-            // emailAddress for driver must be unique in both driver & passenger
+            // emailAddress for passenger must be unique in both driver & passenger
             if (criteria.list() == null || criteria.list().isEmpty()) {
                 // no such emailAddrss in passenger, check driver now
                 session.clear();
@@ -161,7 +161,7 @@ public class PassengerController extends UberAppUtil {
             session.stop();
             res.type("application/json");
             res.status(400);
-            return e.getMessage();
+            return dataToJson(e.getMessage());
         }
     };
 
