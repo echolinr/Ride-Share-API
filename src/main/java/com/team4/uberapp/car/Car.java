@@ -6,6 +6,7 @@
  */
 package com.team4.uberapp.car;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.util.ErrorReport;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 
 //@Data
+@JsonIgnoreProperties({"valid"})
 public class Car implements Validable, Cloneable {
     private UUID id;
     //private DateTime creationDate = new DateTime();
