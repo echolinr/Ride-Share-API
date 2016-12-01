@@ -72,7 +72,7 @@ public class UberAppMain {
         //delete(versionURI +"/sessions/:id", UserSessionController.delById); // delete car by id: v1/cars/:id
 
         //add access control
-//        if (args == null) {
+        if (args == null) {
             before((request, response) -> {
                 String method = request.requestMethod();
                 if (method.equals("POST")) {
@@ -90,6 +90,6 @@ public class UberAppMain {
                     }
                 }
             });
-//        }
+        }
     }
 }
