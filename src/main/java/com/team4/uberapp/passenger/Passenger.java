@@ -1,6 +1,7 @@
 package com.team4.uberapp.passenger;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.team4.uberapp.domain.Validable;
 import com.team4.uberapp.util.ErrorReport;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 
 
 //@Data
-//@JsonIgnoreProperties({ "password" })
+@JsonIgnoreProperties({ "valid" })
 public class Passenger implements Validable, Cloneable {
     private UUID id;
     private String firstName; // maximum 50 characters
