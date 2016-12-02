@@ -11,13 +11,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.team4.uberapp.MongoConfiguration;
 import com.team4.uberapp.domain.Repositories;
-import com.team4.uberapp.location.Coordinate;
 import com.team4.uberapp.persistence.MongoRepositories;
 import com.team4.uberapp.util.UberAppUtil;
 import org.mongolink.MongoSession;
 import org.mongolink.domain.criteria.Restrictions;
 import spark.Route;
-import com.google.gson.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -149,6 +147,72 @@ public class RideController extends UberAppUtil {
             ObjectMapper mapper = new ObjectMapper();
             Ride updatedRide = mapper.readValue(req.body(), Ride.class);
 
+            // carID
+            if (updatedRide.getCarId() != null) {
+                //if (!updatedRide.getCarId()..isEmpty())
+                {
+                    validationRide.setCarId(updatedRide.getCarId());
+                }
+            }
+            // driverId
+            if (updatedRide.getDriverId() != null) {
+                //if (!updatedRide.getCarId()..isEmpty())
+                {
+                    validationRide.setDriverId(updatedRide.getDriverId());
+                }
+            }
+            // passengerId
+            if (updatedRide.getPassengerId() != null) {
+                //if (!updatedRide.getCarId()..isEmpty())
+                {
+                    validationRide.setPassengerId(updatedRide.getPassengerId());
+                }
+            }
+            // status
+            if (updatedRide.getStatus() != null) {
+                if (!updatedRide.getStatus().isEmpty())
+                {
+                    validationRide.setStatus(updatedRide.getStatus());
+                }
+            }
+            // rideType
+            if (updatedRide.getRideType() != null) {
+                if (!updatedRide.getRideType().isEmpty()) {
+                    validationRide.setRideType(updatedRide.getRideType());
+                }
+            }
+            // startLat
+            if (updatedRide.getStartLat() != null) {
+                    validationRide.setStartLat(updatedRide.getStartLat());
+            }
+            // startLong
+            if (updatedRide.getStartLong() != null) {
+                validationRide.setStartLong( updatedRide.getStartLong());
+            }
+            // endLat
+            if (updatedRide.getEndLat() != null) {
+                validationRide.setEndLat(updatedRide.getEndLat());
+            }
+            // endLong
+            if (updatedRide.getEndLong() != null) {
+                validationRide.setEndLong(updatedRide.getEndLong());
+            }
+            // pickupTime
+            if (updatedRide.getPickupTime() != null) {
+                validationRide.setPickupTime(updatedRide.getPickupTime());
+            }
+            // requestTime
+            if (updatedRide.getRequestTime() != null) {
+                validationRide.setRequestTime(updatedRide.getRequestTime());
+            }
+            // dropOffTime
+            if (updatedRide.getDropOffTime() != null) {
+                validationRide.setDropOffTime(updatedRide.getDropOffTime());
+            }
+            // fair
+            if (updatedRide.getFare() !=0) {
+                validationRide.setFare(updatedRide.getFare());
+            }
 
             try{
                 validationRide.isValid();
@@ -157,6 +221,20 @@ public class RideController extends UberAppUtil {
                 res.status(400);
                 return e.getMessage();
             }
+            //update value
+            ride.setRideType(validationRide.getRideType());
+            ride.setStartLat(validationRide.getStartLat());
+            ride.setStartLong(validationRide.getStartLong());
+            ride.setEndLat(validationRide.getEndLat());
+            ride.setEndLong(validationRide.getEndLong());
+            ride.setRequestTime(validationRide.getRequestTime());
+            ride.setPickupTime(validationRide.getPickupTime());
+            ride.setDropOffTime(validationRide.getDropOffTime());
+            ride.setStatus(validationRide.getStatus());
+            ride.setFare(validationRide.getFare());
+            ride.setDriverId(validationRide.getDriverId());
+            ride.setPassengerId(validationRide.getPassengerId());
+            ride.setCarId(validationRide.getCarId());
 
             session.stop();
             res.status(200);
@@ -167,7 +245,7 @@ public class RideController extends UberAppUtil {
             session.stop();
             res.status(400);
             res.type("application/json");
-            return e.getMessage();
+            return dataToJson(e.getMessage());
         }
     };
 

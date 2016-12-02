@@ -5,13 +5,12 @@ package com.team4.uberapp.ride;
  */
 
 import com.team4.uberapp.domain.Validable;
-import com.team4.uberapp.location.Coordinate;
 import com.team4.uberapp.util.ErrorReport;
 
 import java.util.UUID;
 
 //@Data
-public class Ride implements Validable {
+public class Ride implements Validable,Cloneable {
     private UUID id;
     private String rideType;
     private Number startLat;
