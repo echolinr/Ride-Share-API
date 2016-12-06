@@ -20,7 +20,7 @@ by Hector and Lin
 | Component | Weight | Report |
 |-----|------:|-------|
 | Create jMeter Plans for each existing callback | 65 | All required use cases are implemented (see tes plan load_test.jms) |
-| Serve the existing API and DB in a Google Compute Engine Instance | 20 | We use 1 GCE instance to execute jar file and host MongoDB, another instance to run JMeter. GCE console screenshots are also uploaded in the same folder. |
+| Serve the existing API and DB in a Google Compute Engine Instance | 20 | We use 1 GCE instance to execute jar file and host MongoDB, another instance to run JMeter. GCE console screenshots are also uploaded [here](https://github.com/hectorguo/uber-rest-api/blob/master/Milestone5/GCE-VM.png). |
 | Individual Contribution | 10 | 50/50
 | Status report | 5 | current file
 
