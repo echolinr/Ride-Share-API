@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="3.1" jmeter="3.1 r1770033">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Content-Type</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Milestone5" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">600</stringProp>
+        <longProp name="ThreadGroup.start_time">1480651468000</longProp>
+        <longProp name="ThreadGroup.end_time">1480651468000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.delayedStart">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">104.199.120.219</stringProp>
+          <stringProp name="HTTPSampler.port">8080</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create a Driver" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;firstName&quot; : &quot;Hector&quot;,&#xd;
+  &quot;lastName&quot; : &quot;${driverLastName}&quot;,&#xd;
+  &quot;emailAddress&quot; : &quot;${driverEmail}&quot;,&#xd;
+  &quot;password&quot; : &quot;12345678&quot;,&#xd;
+  &quot;addressLine1&quot; : &quot;292 Gibraltar Dr&quot;,&#xd;
+  &quot;addressLine2&quot; : &quot;suit 105&quot;,&#xd;
+  &quot;city&quot; : &quot;Sunnyvale&quot;,&#xd;
+  &quot;state&quot; : &quot;CA&quot;,&#xd;
+  &quot;zip&quot; : &quot;94089&quot;,&#xd;
+  &quot;phoneNumber&quot; : &quot;123-456-7890&quot;,&#xd;
+  &quot;drivingLicense&quot; : &quot;DL12345&quot;,&#xd;
+  &quot;licensedState&quot; : &quot;CA&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/v1/drivers</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Generate driver email and lastname" enabled="true">
+            <stringProp name="cacheKey"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">String aToZ=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&quot;; // 36 letter.
+Random rand=new Random();
+StringBuilder email=new StringBuilder();
+StringBuilder lastName = new StringBuilder();
+for (int i = 0; i &lt; 10; i++) {
+   int randIndex=rand.nextInt(aToZ.length()); 
+   if (i &lt; 5) {
+      lastName.append(aToZ.charAt(randIndex));     
+   }       
+   email.append(aToZ.charAt(randIndex));
+}
+email.append(&quot;@west.cmu.edu&quot;);
+vars.put(&quot;driverLastName&quot;, lastName.toString());
+vars.put(&quot;driverEmail&quot;, email.toString());&#x0;</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Get Driver ID from Response" enabled="true">
+            <stringProp name="cacheKey"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import com.google.gson.*;
+
+String jsonString = prev.getResponseDataAsString();
+Gson gson = new Gson();
+JsonObject jsonObject = (JsonObject) new JsonParser().parse(jsonString);
+String id = gson.fromJson(jsonObject.get(&quot;id&quot;), String.class);
+vars.put(&quot;driverId&quot;, id);</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create a Car for Driver" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;make&quot; : &quot;vw&quot;,&#xd;
+  &quot;model&quot; : &quot;${carModel}&quot;,&#xd;
+  &quot;license&quot; : &quot;${carLicense}&quot;,&#xd;
+  &quot;carType&quot; : &quot;coupe&quot;,&#xd;
+  &quot;color&quot;: &quot;white&quot;,&#xd;
+  &quot;maxPassengers&quot; : 4,&#xd;
+  &quot;validRideTypes&quot; : &quot;ECONOMY&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/v1/drivers/${driverId}/cars</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Generate car lic and model" enabled="true">
+            <stringProp name="cacheKey"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">String aToZ=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&quot;; // 36 letter.
+Random rand=new Random();
+StringBuilder model=new StringBuilder();
+StringBuilder license = new StringBuilder();
+for (int i = 0; i &lt; 8; i++) {
+   int randIndex=rand.nextInt(aToZ.length()); 
+   if (i &lt; 5) {
+      model.append(aToZ.charAt(randIndex));     
+   }       
+   license.append(aToZ.charAt(randIndex));
+}
+vars.put(&quot;carModel&quot;, model.toString());
+vars.put(&quot;carLicense&quot;, license.toString());&#x0;</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Get Car ID from Response" enabled="true">
+            <stringProp name="cacheKey"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import com.google.gson.*;
+
+String jsonString = prev.getResponseDataAsString();
+Gson gson = new Gson();
+JsonObject jsonObject = (JsonObject) new JsonParser().parse(jsonString);
+String id = gson.fromJson(jsonObject.get(&quot;id&quot;), String.class);
+vars.put(&quot;carId&quot;, id);</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create a Passenger" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&#xd;
+  &quot;firstName&quot; : &quot;Lin&quot;,&#xd;
+  &quot;lastName&quot; : &quot;${passengerLastName}&quot;,&#xd;
+  &quot;emailAddress&quot; : &quot;${passengerEmail}&quot;,&#xd;
+  &quot;password&quot; : &quot;12345678&quot;,&#xd;
+  &quot;addressLine1&quot; : &quot;20350 abcd road&quot;,&#xd;
+  &quot;addressLine2&quot; : &quot;apt 123&quot;,&#xd;
+  &quot;city&quot; : &quot;cupertino&quot;,&#xd;
+  &quot;state&quot; : &quot;CA&quot;,&#xd;
+  &quot;zip&quot; : &quot;95129&quot;,&#xd;
+  &quot;phoneNumber&quot; : &quot;123-456-7890&quot;&#xd;
+}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/v1/passengers</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Generate passenger email and lastname" enabled="true">
+            <stringProp name="cacheKey"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script"> String aToZ=&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&quot;; // 36 letter.
+Random rand=new Random();
+StringBuilder email=new StringBuilder();
+StringBuilder lastName = new StringBuilder();
+for (int i = 0; i &lt; 10; i++) {
+   int randIndex=rand.nextInt(aToZ.length()); 
+   if (i &lt; 5) {
+      lastName.append(aToZ.charAt(randIndex));     
+   }       
+   email.append(aToZ.charAt(randIndex));
+}
+email.append(&quot;@east.cmu.edu&quot;);
+vars.put(&quot;passengerLastName&quot;, lastName.toString());
+vars.put(&quot;passengerEmail&quot;, email.toString());&#x0;</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Get Passenger ID from Response" enabled="true">
+            <stringProp name="cacheKey"></stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import com.google.gson.*;
+
+String jsonString = prev.getResponseDataAsString();
+Gson gson = new Gson();
+JsonObject jsonObject = (JsonObject) new JsonParser().parse(jsonString);
+String id = gson.fromJson(jsonObject.get(&quot;id&quot;), String.class);
+vars.put(&quot;passengerId&quot;, id);</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller - 10 Rides" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">10</stringProp>
+        </LoopController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create a Ride" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;rideType&quot;:&quot;ECONOMY&quot;,&#xd;
+	&quot;startLat&quot;: 10.22,&#xd;
+	&quot;startLong&quot;: 0,&#xd;
+	&quot;endLat&quot;: 0.22,&#xd;
+	&quot;endLong&quot;: 0,&#xd;
+	&quot;requestTime&quot;:1480131627374,&#xd;
+	&quot;pickupTime&quot;:1480131657374,&#xd;
+	&quot;dropOffTime&quot;:1480131697374,&#xd;
+	&quot;status&quot;:&quot;AWAITING_DRIVER&quot;,&#xd;
+	&quot;fare&quot;:5,&#xd;
+	&quot;passengerId&quot;:&quot;${passengerId}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/v1/rides</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Get Ride ID from Response" enabled="true">
+              <stringProp name="cacheKey"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">import com.google.gson.*;
+
+String jsonString = prev.getResponseDataAsString();
+Gson gson = new Gson();
+JsonObject jsonObject = (JsonObject) new JsonParser().parse(jsonString);
+String id = gson.fromJson(jsonObject.get(&quot;id&quot;), String.class);
+vars.put(&quot;rideId&quot;, id);</stringProp>
+              <stringProp name="scriptLanguage">java</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Update a Ride with Driver and Car" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;driverId&quot;:&quot;${driverId}&quot;,&#xd;
+	&quot;carId&quot;:&quot;${carId}&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/v1/rides/${rideId}</stringProp>
+            <stringProp name="HTTPSampler.method">PATCH</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller to Add Route Points" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">12</stringProp>
+          </LoopController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Add a Route Point" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
+	&quot;lat&quot;: 22.11,&#xd;
+	&quot;lng&quot;: 11.11,&#xd;
+	&quot;timestamp&quot;: 1480131657374&#xd;
+}</stringProp>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path">/v1/rides/${rideId}/routePoints</stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <boolProp name="HTTPSampler.monitor">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Get RoutePoint ID from Response" enabled="true">
+              <stringProp name="cacheKey"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">import com.google.gson.*;
+
+String jsonString = prev.getResponseDataAsString();
+Gson gson = new Gson();
+JsonObject jsonObject = (JsonObject) new JsonParser().parse(jsonString);
+String id = gson.fromJson(jsonObject.get(&quot;id&quot;), String.class);
+vars.put(&quot;routePointId&quot;, id);</stringProp>
+              <stringProp name="scriptLanguage">java</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer - 10Sec" enabled="true">
+              <stringProp name="ConstantTimer.delay">10000</stringProp>
+            </ConstantTimer>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Mark a Ride Complete" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+	&quot;status&quot;:&quot;CLOSED&quot;&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain"></stringProp>
+            <stringProp name="HTTPSampler.port"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/v1/rides/${rideId}</stringProp>
+            <stringProp name="HTTPSampler.method">PATCH</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <boolProp name="HTTPSampler.monitor">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">/home/lzhai/Milestone5-Result/10-Round-Tree.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="View Results in Table" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">/home/lzhai/Milestone5-Result/10-Round-Results-Table.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="StatGraphVisualizer" testclass="ResultCollector" testname="Aggregate Graph" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">/home/lzhai/Milestone5-Result/10-Round-Aggregate-Graph.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="RespTimeGraphVisualizer" testclass="ResultCollector" testname="Response Time Graph" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">/home/lzhai/Milestone5-Result/10-Round-Response-Time-Graph.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
