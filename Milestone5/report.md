@@ -3,9 +3,9 @@ by Hector and Lin
 
 ## Code Sharing
 1. Jmeter load test plan  is the "load_test.jms" file under folder Milestone5 (https://github.com/hectorguo/uber-rest-api/tree/master/Milestone5).
-2. Aggregate Graph: http://ww1.sinaimg.cn/large/6d0af205gw1fah4yu7omej20vs0b2go8.jpg
-3. Response Time Graph: http://ww3.sinaimg.cn/large/6d0af205gw1fah4yvc4udj20rl0dw0z9.jpg
-4. Full test results (in CVS format) are also in the same folder.
+2. Aggregate Graph for 100 instance at 60 seconds interval: https://github.com/hectorguo/uber-rest-api/blob/master/Milestone5/Aggregate_Graph_100_60.png 
+3. Response Time Graph for 100 instance at 60 seconds interval: https://github.com/hectorguo/uber-rest-api/blob/master/Milestone5/Response_Time_Graph_100_60.png
+4. Full test results (in CVS format) are <B>NOT</B> uploaded.
 
 ## Hours Spent: Hector 5 hours, Lin 10 hours
 
