@@ -1,8 +1,15 @@
-# Status Report Milestone 1 and 2
-## Naming Conventions
-All our coding fowllows Oracle Java Naming Conventions, please refer to http://www.oracle.com/technetwork/java/codeconventions-135099.html
+# Status Report Milestone 2
+## Naming Conventions (updated on Dec 11,2016)
+Name	Type | Convention 
+-----------|----------
+class name	| start with uppercase letter and be a noun. e.g. Car.
+interface name	| start with uppercase letter. e.g. 
+method name	|  start with lowercase letter and be a verb e.g. main(), println() etc.
+variable name	| should start with lowercase letter e.g. firstName etc.
+package name	| should be in lowercase letter e.g. java, lang etc.
+constants name	| should be in uppercase letter. e.g. MAX_PRIORITY etc.
 
-##Individual Contribution
+##Individual Contribution 
 Hector 50%
 Lin 50%
 
