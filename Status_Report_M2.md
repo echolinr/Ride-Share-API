@@ -41,12 +41,12 @@ Error Code  | Error Message    | Relevant Resources  | Parameters
 5001  | Invalid parameters or resource {0} given  | Session  | `0 - Resource Name`
 ----
 
-
 **Individual Contribution **
+
 Hector 50%
 Lin 50%
 
-** Status Report**
+**Status Report**
 
 Until this report, we've finished following api:
 
@@ -54,7 +54,7 @@ Until this report, we've finished following api:
 2. setup routes api for drivers and rides but need to implement all properies
 3. GET /drivers/:driverId/cars & POST /drivers/:driverId/cars
 
-** Challenges**
+**Challenges**
 We actually faced a lot of challengs in this project, most of them have been sovled. They are:
 
 1. A little bit bumpy when using IntelliJ at the beginnning. IntelliJ's own java SDK cause a lot of confusion. Spent some time to figure it out. Import a project into IntelliJ has some trick too. build.gradle sometimes not automatic import library
@@ -74,4 +74,6 @@ Parameter	| Current Applicable Resources |	Description
 'offsetId' |	all	| The ID of the last resource already retrieved from a matching list. When provided, server returns resources after this matching element. This is useful in combination with count to get the next page of a list of elements
 'sort' | 	all	| Specify the field by which results should be ordered
 'sortOrder' |	all	| Used in combination with 'sort', it specifies the order in which to return the elements. 'asc' is for asending or 'desc' for descending. Default value is asc except for a time-based sort field in which case the default values is desc
+
+
 **Note**: In this implementation, you only need to support one field for 'sort' and 'sortOrder'.
