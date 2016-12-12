@@ -3,7 +3,7 @@
 Name	Type | Convention 
 -----------|----------
 class name	| start with uppercase letter and be a noun. e.g. Car.
-interface name	| start with uppercase letter. e.g. 
+interface name	| start with uppercase letter. e.g. Vehicle.
 method name	|  start with lowercase letter and be a verb e.g. main(), println() etc.
 variable name	| should start with lowercase letter e.g. firstName etc.
 package name	| should be in lowercase letter e.g. java, lang etc.
