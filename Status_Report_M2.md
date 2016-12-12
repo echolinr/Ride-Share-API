@@ -1,5 +1,6 @@
 # Status Report Milestone 2
-** Naming Conventions (updated on Dec 11,2016)**
+
+**Naming Conventions (updated on Dec 11,2016)**
 
 Name	Type | Convention 
 -----------|----------
@@ -61,7 +62,7 @@ We actually faced a lot of challengs in this project, most of them have been sov
 3. Json processing for request and result returning
 4. How to use MongoDB in Java. To better understand it, we actually spent quite some time in learning mongodb, mongodb java driver and even morphia a little.
 
-** Things need help **
+**Things need help**
 
  How to use critera, we have not finished this part  in Milestone1: 
 
