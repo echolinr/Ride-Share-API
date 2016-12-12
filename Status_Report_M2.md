@@ -41,7 +41,7 @@ Error Code  | Error Message    | Relevant Resources  | Parameters
 5001  | Invalid parameters or resource {0} given  | Session  | `0 - Resource Name`
 ----
 
-**Individual Contribution **
+**Individual Contribution**
 
 Hector 50%
 Lin 50%
@@ -66,7 +66,7 @@ We actually faced a lot of challengs in this project, most of them have been sov
 
  How to use critera, we have not finished this part  in Milestone1: 
 
-*Query String Parameters
+*Query String Parameters*
 
 Parameter	| Current Applicable Resources |	Description
 ----------|------------------------------|-------------
