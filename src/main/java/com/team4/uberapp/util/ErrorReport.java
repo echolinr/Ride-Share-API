@@ -9,6 +9,12 @@ public class ErrorReport {
     private int errorCode;
     private String errorMsg;
 
+    /**
+     * Instantiates a new Error report.
+     *
+     * @param errorCode the error code
+     * @param errorMsg  the error msg
+     */
     public ErrorReport(int errorCode, String errorMsg) {
         this.errorCode = errorCode;
         this.errorMsg = errorMsg;

@@ -33,15 +33,14 @@ import java.util.stream.Collectors;
  * @version 0.2
  */
 public class CarController extends UberAppUtil {
-    // GET /cars  Get all cars
     /**
      * Implementation  for route:
-     *      //GET/cars  -- get all cars
-     *      //Get/cars for querying parameters count, offsetId, sort & sortOrder
+     *      //GET  /cars  -- get all cars
+     *      //GET  /cars for querying parameters count, offsetId, sort & sortOrder
      *      Used in combination with sort, it specifies the order in which to return the elements. asc is for asending
      *      or desc for descending. Default value is asc except for a time-based sort field in which case the default values is desc
      *
-     * @return AppUser - userID in token if not expired or null
+     * @return List<Car> a list of cars
      */
     public static Route getAll = (req, res) -> {
         //initialize db connection
@@ -105,7 +104,12 @@ public class CarController extends UberAppUtil {
 
     };
 
-    // GET /cars/:id  Get car by id
+
+    /**
+     * The constant getById.
+     * GET /cars/:id  Get car by id
+     * @return Car  info for one car
+     */
     public static Route getById = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -136,7 +140,20 @@ public class CarController extends UberAppUtil {
         }
     };
 
-    // POST /cars  Create car
+    /**
+     * The constant create.
+     * POST /cars  Create car
+     * {
+     *    "make":"vw",
+     *    "model": "beetle",
+     *    "license": "5PVXXX",
+     *    "carType": "Sedan",
+     *    "maxPassengers": 4,
+     *    "color": "white",
+     *    "validRideTypes": "ECONOMY"
+     *    }
+     * @return Car info for a car which has created
+     */
     public static Route create = (req, res) -> {
         /* initialize db connection */
         MongoSession session = MongoConfiguration.createSession();
@@ -148,46 +165,6 @@ public class CarController extends UberAppUtil {
             Car car = mapper.readValue(req.body(), Car.class);
             car.setId(UUID.randomUUID());
 
-/*
-            Car car = new Car("foo", "foo", "foo","foo",0,"foo" );
-            int i =0;
-            JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
-            Gson gson = new Gson();
-
-            // get make
-            if (jsonObject.get("make") != null) {
-                car.setMake(gson.fromJson(jsonObject.get("make"), String.class));
-                i = 1;
-            }
-            // get model
-            if (jsonObject.get("model") != null) {
-                car.setMake(gson.fromJson(jsonObject.get("model"), String.class));
-                i = 1;
-            }
-            // get license
-            if (jsonObject.get("license") != null) {
-                car.setLicense(gson.fromJson(jsonObject.get("license"), String.class));
-                i = 1;
-            }
-
-            // patch carType
-            if (jsonObject.get("carType") != null) {
-                car.setCarType(gson.fromJson(jsonObject.get("carType"), String.class));
-                i = 1;
-            }
-
-            // patch validRideTypes
-            if (jsonObject.get("validRideTypes") != null) {
-                car.setValidRideTypes(gson.fromJson(jsonObject.get("validRideTypes"), String.class));
-                i = 1;
-            }
-
-            // patch maxPassengers
-            if (jsonObject.get("maxPassengers") != null) {
-                car.setMaxPassengers(gson.fromJson(jsonObject.get("maxPassengers"), Integer.class));
-                i = 1;
-            }
-*/
             res.type("application/json");
 
             try {
@@ -213,7 +190,9 @@ public class CarController extends UberAppUtil {
     };
 
 
-    // DELETE /cars/:id  Delete car by id
+    /**
+     * DELETE /cars/:id  Delete car by id
+     */
     public static Route delById = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -239,7 +218,10 @@ public class CarController extends UberAppUtil {
         }
     };
 
-    // PATCH /cars/:id  Update car by id
+    /**
+     * PATCH /cars/:id  Update car by id
+     * @return Car info for a car which has updated
+     */
     public static Route update = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -256,46 +238,6 @@ public class CarController extends UberAppUtil {
             session.stop();
             return dataToJson("Car: " + req.params(":id") +" not found");
         } else {
-            /*
-            int i =0;
-            JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
-            Gson gson = new Gson();
-
-            // get make
-            if (jsonObject.get("make") != null) {
-                car.setMake(gson.fromJson(jsonObject.get("make"), String.class));
-                i = 1;
-            }
-            // get model
-            if (jsonObject.get("model") != null) {
-                car.setMake(gson.fromJson(jsonObject.get("model"), String.class));
-                i = 1;
-            }
-            // get license
-            if (jsonObject.get("license") != null) {
-                car.setLicense(gson.fromJson(jsonObject.get("license"), String.class));
-                i = 1;
-            }
-
-            // patch carType
-            if (jsonObject.get("carType") != null) {
-                car.setCarType(gson.fromJson(jsonObject.get("carType"), String.class));
-                i = 1;
-            }
-
-            // patch validRideTypes
-            if (jsonObject.get("validRideTypes") != null) {
-                car.setValidRideTypes(gson.fromJson(jsonObject.get("validRideTypes"), String.class));
-                i = 1;
-            }
-
-            // patch maxPassengers
-            if (jsonObject.get("maxPassengers") != null) {
-                car.setMaxPassengers(gson.fromJson(jsonObject.get("maxPassengers"), Integer.class));
-                i = 1;
-            }
-            */
-
             // clone a car for validation purpose
             Car validationCar = (Car) car.clone();
             try {
@@ -366,7 +308,19 @@ public class CarController extends UberAppUtil {
         }
     };
 
-    // POST /drivers/:driverId/cars  Create car
+    /**
+     * POST /drivers/:driverId/cars  Create car
+     * {
+     *    "make":"vw",
+     *    "model": "beetle",
+     *    "license": "5PVXXX",
+     *    "carType": "Sedan",
+     *    "maxPassengers": 4,
+     *    "color": "white",
+     *    "validRideTypes": "ECONOMY"
+     *    }
+     * @return Car info for a car which has created
+     */
     public static Route createByDriverId = (req, res) -> {
         MongoSession session = MongoConfiguration.createSession();
         session.start();
@@ -409,7 +363,10 @@ public class CarController extends UberAppUtil {
         }
     };
 
-    // GET /drivers/:driverId/cars  Get car
+    /**
+     * GET /drivers/:driverId/cars  Get car
+     * @return List<Car> a list of cars
+     */
     public static Route getByDriverId = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();

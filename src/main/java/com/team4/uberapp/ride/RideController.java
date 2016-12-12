@@ -26,7 +26,8 @@ import java.util.UUID;
 public class RideController extends UberAppUtil {
 
     /**
-     * The Spark Route getAll.
+     * GET /rides  Get all rides
+     * @return List<Ride> a list of rides
      */
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
@@ -43,7 +44,8 @@ public class RideController extends UberAppUtil {
     };
 
     /**
-     * The Spark Route getById.
+     * GET /rides/:id  Get one ride by id
+     * @return Ride  one ride
      */
     public static Route getById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
@@ -61,7 +63,23 @@ public class RideController extends UberAppUtil {
     };
 
     /**
-     * The Spark Route create.
+     * POST /rides  Create ride
+     * {
+     *  "rideType":"ECONOMY",
+     *  "startLat": 10.22,
+     *  "startLong": 0,
+     *  "endLat": 0.22,
+     *  "endLong": 0,
+     *  "requestTime":1480131627374,
+     *  "pickupTime":1480131657374,
+     *  "dropOffTime":1480131697374,
+     *  "status":"AWAITING_DRIVER",
+     *  "fare":5,
+     *  "driverId":"9e584258-554c-4275-abba-6f02c3ab7476",
+     *  "carId":"b462bcae-2add-4b59-8c18-107a30c1e87e",
+     *  "passengerId":"a57536e5-c05c-437a-9ef9-d27a267a7d85"
+     * }
+     * @return Ride  info for a ride which has created
      */
     public static Route create = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
@@ -72,39 +90,6 @@ public class RideController extends UberAppUtil {
         try{
             ObjectMapper mapper = new ObjectMapper();
             Ride ride = mapper.readValue(req.body(), Ride.class);
-//            Gson gson = new Gson();
-//            JsonObject rideJson = gson.fromJson(req.body(), JsonObject.class);
-//
-//            // get startPoint and endPoint
-//            JsonElement start = rideJson.getAsJsonObject("startPoint");
-//            float startLat = start.getAsJsonObject().get("lat").getAsFloat();
-//            float startLng = start.getAsJsonObject().get("long").getAsFloat();
-//            JsonElement end = rideJson.getAsJsonObject("endPoint");
-//            float endLat = end.getAsJsonObject().get("lat").getAsFloat();
-//            float endLng = end.getAsJsonObject().get("long").getAsFloat();
-//
-//            // get timestamp
-//            Number requestTime = rideJson.get("requestTime").getAsNumber();
-//            Number pickupTime = rideJson.get("pickupTime").getAsNumber();
-//            Number dropOffTime = rideJson.get("dropOffTime").getAsNumber();
-//
-//            // initial ride
-//            Ride ride = new Ride();
-//
-//            ride.setCarId(UUID.fromString(rideJson.get("carId").getAsString()));
-//            ride.setDriverId(UUID.fromString(rideJson.get("driverId").getAsString()));
-//            ride.setPassengerId(UUID.fromString(rideJson.get("passengerId").getAsString()));
-//
-//            ride.setStartPoint(new Coordinate(startLat, startLng));
-//            ride.setEndPoint(new Coordinate(endLat, endLng));
-//
-//            ride.setRequestTime(requestTime);
-//            ride.setDropOffTime(dropOffTime);
-//            ride.setPickupTime(pickupTime);
-//
-//            ride.setRideType(rideJson.get("rideType").getAsString());
-//            ride.setStatus(rideJson.get("status").getAsString());
-//            ride.setFare(rideJson.get("fare").getAsInt());
 
             try {
                 ride.isValid();
@@ -131,7 +116,23 @@ public class RideController extends UberAppUtil {
     };
 
     /**
-     * The Spark Route update.
+     * POST /rides/:id  Update ride by id
+     * {
+     *  "rideType":"ECONOMY",
+     *  "startLat": 10.22,
+     *  "startLong": 0,
+     *  "endLat": 0.22,
+     *  "endLong": 0,
+     *  "requestTime":1480131627374,
+     *  "pickupTime":1480131657374,
+     *  "dropOffTime":1480131697374,
+     *  "status":"AWAITING_DRIVER",
+     *  "fare":5,
+     *  "driverId":"9e584258-554c-4275-abba-6f02c3ab7476",
+     *  "carId":"b462bcae-2add-4b59-8c18-107a30c1e87e",
+     *  "passengerId":"a57536e5-c05c-437a-9ef9-d27a267a7d85"
+     * }
+     * @return Ride  info for a ride which has updated
      */
     public static Route update = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
@@ -250,7 +251,7 @@ public class RideController extends UberAppUtil {
     };
 
     /**
-     * The Spark Route delById.
+     * DELETE /rides/:id  Delete ride by id
      */
     public static Route delById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
@@ -269,7 +270,13 @@ public class RideController extends UberAppUtil {
     };
 
     /**
-     * The Spark Route addRoutePoints.
+     * POST /rides/:id/routePoints  add route points
+     * {
+     *  "lat": 22.11,
+     *  "lng": 11.11,
+     *  "timestamp": 1480131657374
+     * }
+     * @return <RoutePoint>  one route point with id
      */
     public static Route addRoutePoints = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
@@ -310,7 +317,8 @@ public class RideController extends UberAppUtil {
     };
 
     /**
-     * The Spark Route getRoutePoints.
+     * GET /rides/:id/routePoints  Get route points by ride id
+     * @return List<RoutePoint> a list of route points
      */
     public static Route getRoutePoints = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();

@@ -17,8 +17,6 @@ public class Ride implements Validable,Cloneable {
     private Number startLong;
     private Number endLat;
     private Number endLong;
-//    private Coordinate startPoint;
-//    private Coordinate endPoint;
     private Number requestTime;
     private Number pickupTime;
     private Number dropOffTime;
@@ -58,21 +56,6 @@ public class Ride implements Validable,Cloneable {
     public void setStartLong(Number startLong) {this.startLong = startLong;}
     public void setEndLat(Number endLat) {this.endLat = endLat;}
     public void setEndLong(Number endLong) {this.endLong = endLong;}
-//    public Coordinate getStartPoint() {
-//        return startPoint;
-//    }
-//
-//    public void setStartPoint(Coordinate startPoint) {
-//        this.startPoint = startPoint;
-//    }
-//
-//    public Coordinate getEndPoint() {
-//        return endPoint;
-//    }
-//
-//    public void setEndPoint(Coordinate endPoint) {
-//        this.endPoint = endPoint;
-//    }
 
     public Number getRequestTime() {
         return requestTime;
@@ -159,8 +142,6 @@ public class Ride implements Validable,Cloneable {
     public Ride(String rideType, Number startLat, Number startLong, Number endLat, Number endLong, Number requestTime, Number pickupTime, Number dropOffTime, String status, int fare, UUID driverId, UUID carId, UUID passengerId) {
         this.id = UUID.randomUUID();
         this.rideType = rideType;
-//        this.startPoint = startPoint;
-//        this.endPoint = endPoint;
         this.startLat = startLat;
         this.startLong = startLong;
         this.endLat = endLat;

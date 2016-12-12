@@ -5,7 +5,6 @@ package com.team4.uberapp.ride;
  */
 
 import com.team4.uberapp.domain.Validable;
-import com.team4.uberapp.location.Coordinate;
 
 import java.util.UUID;
 
@@ -24,6 +23,14 @@ public class RoutePoint implements Validable {
         // for mongolink
     }
 
+    /**
+     * Instantiates a new Route point.
+     *
+     * @param lat       the lat
+     * @param lng       the lng
+     * @param timestamp the timestamp
+     * @param rideId    the ride id
+     */
     public RoutePoint(float lat, float lng, Number timestamp, UUID rideId) {
         this.id = UUID.randomUUID();
         this.lat = lat;

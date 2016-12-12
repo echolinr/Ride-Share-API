@@ -27,7 +27,10 @@ import java.util.*;
  * The type User session controller.
  */
 public class UserSessionController extends UberAppUtil {
-    // GET /cars  Get all cars
+    /**
+     * GET /sessions  Get all sessions
+     * @return List<Session> a list of sessions
+     */
     public static Route getAll = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -92,7 +95,15 @@ public class UserSessionController extends UberAppUtil {
         }
 
     };
-    // POST /sessions  Create sessions
+
+    /**
+     * POST /sessions  Create sessions
+     * {
+     * "email": "hectorguo@gmail.com",
+     * "password": "123456"
+     * }
+     * @return Seesion  one session with id
+     */
     public static Route create = (req, res) -> {
         Driver driver;
         Passenger passenger;

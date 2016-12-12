@@ -32,7 +32,15 @@ import java.util.UUID;
  * @version 0.2
  */
 public class PassengerController extends UberAppUtil {
-    // GET /passengers  Get all passengers
+    /**
+     * Implementation for route:
+     *      //GET  /passengers  -- get all passengers
+     *      //GET  /passengers for querying parameters count, offsetId, sort & sortOrder
+     *      Used in combination with sort, it specifies the order in which to return the elements. asc is for asending
+     *      or desc for descending. Default value is asc except for a time-based sort field in which case the default values is desc
+     *
+     * @return List<Passenger> a list of passengers
+     */
     public static Route getAll = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -90,7 +98,11 @@ public class PassengerController extends UberAppUtil {
     };
 
 
-    // GET /passengers/:id  Get passenger by id
+    /**
+     * The constant getById.
+     * GET /passengers/:id  Get passenger by id
+     * @return Passenger  info for one passenger
+     */
     public static Route getById = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -114,7 +126,23 @@ public class PassengerController extends UberAppUtil {
         }
     };
 
-    // POST /passengers  Create passenger
+    /**
+     * The constant create.
+     * POST /passengers  Create passenger
+     * {
+     *  "firstName":"Hector",
+     *  "lastName":"Guo",
+     *  "emailAddress":"hectorguo@live.com",
+     *  "password":"123456",
+     *  "addressLine2":"",
+     *  "addressLine1":"100N Rd",
+     *  "city":"Mountain View",
+     *  "state":"CA",
+     *  "zip":"94053",
+     *  "phoneNumber":"666-777-9999"
+     * }
+     * @return Passenger info for a passenger which has created
+     */
     public static Route create = (req, res) -> {
         /* initialize db connection */
         MongoSession session = MongoConfiguration.createSession();
@@ -165,7 +193,6 @@ public class PassengerController extends UberAppUtil {
         }
     };
 
-
     // DELETE /passengers/:id  Delete passenger by id
     public static Route delById = (req, res) -> {
         //initialize db connection
@@ -192,7 +219,11 @@ public class PassengerController extends UberAppUtil {
             return dataToJson("Passenger: " + req.params(":id") +" deleted");
         }
     };
-    // PATCH /passengers/:id  Update passenger by id
+
+    /**
+     * PATCH /passengers/:id  Update passenger by id
+     * @return Passenger info for a passenger which has updated
+     */
     public static Route update = (req, res) -> {
         //initialize db connection
         MongoSession session = MongoConfiguration.createSession();
@@ -308,74 +339,6 @@ public class PassengerController extends UberAppUtil {
                 res.status(400);
                 return e.getMessage();
             }
-/*
-            int i =0;
-            JsonObject jsonObject = (JsonObject) new JsonParser().parse(req.body());
-            Gson gson = new Gson();
-
-            // get lastName
-            if (jsonObject.get("lastName") != null) {
-                passenger.setLastName(gson.fromJson(jsonObject.get("lastName"), String.class));
-                i = 1;
-            }
-            // get emailAddress
-            if (jsonObject.get("emailAddress") != null) {
-                passenger.setEmailAddress(gson.fromJson(jsonObject.get("emailAddress"), String.class));
-                i = 1;
-            }
-
-            // get password: should convert to hash?
-            if (jsonObject.get("password") != null) {
-                passenger.setPassword(gson.fromJson(jsonObject.get("password"), String.class));
-                i = 1;
-            }
-
-            // get addressLine1
-            if (jsonObject.get("addressLine1") != null) {
-                passenger.setAddressLine1(gson.fromJson(jsonObject.get("addressLine1"), String.class));
-                i = 1;
-            }
-
-            // get addressLine2
-            if (jsonObject.get("addressLine2") != null) {
-                passenger.setAddressLine2(gson.fromJson(jsonObject.get("addressLine2"), String.class));
-                i = 1;
-            }
-
-            // get city
-            if (jsonObject.get("city") != null) {
-                passenger.setCity(gson.fromJson(jsonObject.get("city"), String.class));
-                i = 1;
-            }
-
-            // get state
-            if (jsonObject.get("state") != null) {
-                passenger.setState(gson.fromJson(jsonObject.get("state"), String.class));
-                i = 1;
-            }
-
-            // get zip
-            if (jsonObject.get("zip") != null) {
-                passenger.setZip(gson.fromJson(jsonObject.get("zip"), String.class));
-                i = 1;
-            }
-
-            // get state
-            if (jsonObject.get("phoneNumber") != null) {
-                passenger.setPhoneNumber(gson.fromJson(jsonObject.get("phoneNumber"), String.class));
-                i = 1;
-            }
-
-            session.stop();
-            res.type("application/json");
-            res.status(200);
-            if (i !=0) {
-
-                return JsonUtil.dataToJson("Passenger: " + req.params(":id") +" updated");
-            } else {
-                return JsonUtil.dataToJson("Passenger" + req.params(":id") + "incorrect params" + req.body());
-            }
-*/
         }
     };
 

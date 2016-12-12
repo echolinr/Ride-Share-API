@@ -33,7 +33,15 @@ import java.util.UUID;
  * @version 0.2
  */
 public class DriverController extends UberAppUtil {
-
+    /**
+     * Implementation for route:
+     *      //GET  /drivers  -- get all drivers
+     *      //GET  /drivers for querying parameters count, offsetId, sort & sortOrder
+     *      Used in combination with sort, it specifies the order in which to return the elements. asc is for asending
+     *      or desc for descending. Default value is asc except for a time-based sort field in which case the default values is desc
+     *
+     * @return List<Driver> a list of drivers
+     */
     public static Route getAll = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
         session.start();
@@ -87,6 +95,11 @@ public class DriverController extends UberAppUtil {
         return dataToJson(drivers);
     };
 
+    /**
+     * The constant getById.
+     * GET /drivers/:id  Get driver by id
+     * @return Driver  info for one driver
+     */
     public static Route getById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -115,6 +128,25 @@ public class DriverController extends UberAppUtil {
         }
     };
 
+    /**
+     * The constant create.
+     * POST /drivers  Create driver
+     * {
+     *  "firstName":"Hector",
+     *  "lastName":"Guo",
+     *  "emailAddress":"hectorguo@live.com",
+     *  "password":"123456",
+     *  "addressLine2":"",
+     *  "addressLine1":"100N Rd",
+     *  "city":"Mountain View",
+     *  "state":"CA",
+     *  "zip":"94053",
+     *  "phoneNumber":"666-777-9999",
+     *  "drivingLicense":"xxx111222333",
+     *  "licensedState":"zz"
+     * }
+     * @return Driver info for a driver which has created
+     */
     public static Route create = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
         session.start();
@@ -166,6 +198,10 @@ public class DriverController extends UberAppUtil {
         }
     };
 
+    /**
+     * PATCH /drivers/:id  Update driver by id
+     * @return Driver info for a driver which has updated
+     */
     public static Route update = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 
@@ -287,6 +323,9 @@ public class DriverController extends UberAppUtil {
         }
     };
 
+    /**
+     * DELETE /cars/:id  Delete car by id
+     */
     public static Route delById = (req, res) -> {
         final MongoSession session = MongoConfiguration.createSession();
 

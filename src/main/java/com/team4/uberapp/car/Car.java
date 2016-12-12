@@ -34,6 +34,17 @@ public class Car implements Validable, Cloneable {
         // for mongolink
     }
 
+    /**
+     * Instantiates a new Car.
+     *
+     * @param make           the make
+     * @param model          the model
+     * @param license        the license
+     * @param carType        the car type
+     * @param maxPassengers  the max passengers
+     * @param color          the color
+     * @param validRideTypes the valid ride types
+     */
     public Car(String make, String model, String license, String carType, int maxPassengers, String color, String validRideTypes) {
         this.id = UUID.randomUUID();
         this.make   = make;

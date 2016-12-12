@@ -30,6 +30,12 @@ public class UserSession implements Validable, Cloneable {
         // for mongolink
     }
 
+    /**
+     * Instantiates a new User session.
+     *
+     * @param email    the email
+     * @param password the password
+     */
     public UserSession(String email, String password) {
         //this.id = UUID.randomUUID();
         this.email   = email;

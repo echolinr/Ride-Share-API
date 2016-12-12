@@ -10,6 +10,12 @@ public class AppUser {
     private String userType;
     private String userID;
 
+    /**
+     * Instantiates a new App user.
+     *
+     * @param userID   the user id
+     * @param userType the user type
+     */
     public AppUser(String userID, String userType) {
         this.userID = userID;
         this.userType = userType;
