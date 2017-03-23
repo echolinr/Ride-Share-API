@@ -1,34 +1,24 @@
-# Ride-Share-API
-# mongolink-example
+# Ride-Share-API - Independent Study
 
-[![Build Status](https://travis-ci.org/MongoLink/mongolink-example.svg)](https://travis-ci.org/MongoLink/mongolink-example)
+##Instructions
 
-## Launch the example
+| Week | Activity | 
+|------|----|
+|1	| Prepare Environment |
+|2	| Implement Milestone 1 API |
+|3	| Implement Milestone 2 API	|
+|4	| Implement Encryption, Authentication & Access Control and Unit Tests (Milestone 3)|
+|5 	| Complete Unit Tests for Full Coverage (Milestone 4)|
+|6 | Test Scaling (Milestone 5)|
+|7 	| Test Performance (Mileston 6)|
+| 8 | Test Reliability (Mielstone 7)|
 
-`mvn jetty:run`
 
-## Usage
+## Technology
+	
+Following ar the preferred technologies for the Independent Study. If you choose to use different technologies, you will be on our own in terms of obtaining support for using that technology. 
 
-### Get all
++ Spark
++ Jackson
++ MongoLink
 
-`curl http://localhost:8080/fruits`
-
-### Add
-
-`curl -d "name=aFruit" http://localhost:8080/fruits`
-
-### Get
-
-`curl http://localhost:8080/fruits/fruitId`
-
-### Modify
-
-`curl -X PUT -d "name=anotherFruit" http://localhost:8080/fruits/fruitId`
-
-### Delete
-
-`curl -X DELETE http://localhost:8080/fruits/fruitId`
-
-## Online example
-
-http://mongolink-example.mongolink.cloudbees.net/
